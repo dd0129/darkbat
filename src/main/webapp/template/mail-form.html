@@ -1,0 +1,97 @@
+<div id="wizard" class="info-box">
+    <h3>{@formName}</h3>
+    <div id="add-query-form" class="content-box">
+        <div id="mail-config-back-info"></div>
+        <div class="form-horizontal">
+            <div class="control-group" id="mail-title">
+                <label class="control-label">邮件名称</label>
+                <div class="controls">
+                    <input type="text" class="input-xlarge" data-key="mailTitle" required>
+                    <span class="help-inline help-inline-13">必填，不可重名</span>
+                </div>
+            </div>
+            <div class="control-group" id="sendCycle">
+                <label class="control-label">发送频率</label>
+                <div class="controls">
+                    <input type="radio" value="D" name="send-cycle" data-key="sendCycle" checked>
+                    <label class="checkbox-inline">日</label>
+                    <input type="radio" value="W" name="send-cycle" data-key="sendCycle">
+                    <label class="checkbox-inline">周</label>
+                    <input type="radio" value="M" name="send-cycle" data-key="sendCycle">
+                    <label class="checkbox-inline">月</label>
+                </div>
+            </div>
+            <!-- <div class="control-group" id="time-range">
+                <label class="control-label">日报时间区间</label>
+                <div class="controls">
+                    <select name="" id="" data-key="timeRange" style="width:280px;">
+                        <option value="1">1天内</option>
+                        <option value="2">2天内</option>
+                        <option value="3">3天内</option>
+                        <option value="4">4天内</option>
+                        <option value="5">5天内</option>
+                        <option value="6">6天内</option>
+                        <option value="7" selected>7天内</option>
+                        <option value="8">8天内</option>
+                        <option value="9">9天内</option>
+                        <option value="10">10天内</option>
+                        <option value="11">11天内</option>
+                        <option value="12">12天内</option>
+                        <option value="13">13天内</option>
+                        <option value="14">14天内</option>
+                        <option value="15">15天内</option>
+                        <option value="16">16天内</option>
+                        <option value="17">17天内</option>
+                        <option value="18">18天内</option>
+                        <option value="19">19天内</option>
+                        <option value="20">20天内</option>
+                        <option value="21">21天内</option>
+                        <option value="22">22天内</option>
+                        <option value="23">23天内</option>
+                        <option value="24">24天内</option>
+                        <option value="25">25天内</option>
+                        <option value="26">26天内</option>
+                        <option value="27">27天内</option>
+                        <option value="28">28天内</option>
+                        <option value="29">29天内</option>
+                        <option value="30">30天内</option>
+                        <option value="31">31天内</option>
+                    </select>
+                </div>
+            </div> -->
+            <div class="control-group"  id="send-time">
+                <label class="control-label">发送时间</label>
+                <div class="controls">
+                    <input type="text" value="09:00" class="input-xlarge" data-key="sendTime" required>
+                    <span class="help-inline help-inline-13">必填，格式(<em>hh:mm</em>)</span>
+                </div>
+            </div>
+            <div id="report-chooser-container"></div>
+            <div id="report-chooser-edit" style="font-size: 13px;" class="hide"></div>
+            <div id="page-item-chooser-edit" style="font-size: 13px;" class="hide"></div>
+            <div id="email-chooser-container">
+                <div class="control-group" id="email-chooser">
+                    <label class="control-label">接收人员</label>
+                    <div class="controls">
+                        <div style="float: right; width: 43%;"><div style="float:left; width: 125px;">
+                            <span class="help-inline help-inline-13">提示：如果发送给邮件组，请发邮件给itsupport，开通此邮箱接收外部邮件权限</span>
+                        </div></div>
+                        <textarea id="user-mail-list" type="text" class="input-first" placeholder="请输入接收人员邮箱，逗号分隔，@dianping.com可省略..."></textarea>
+                        <input type="text" class="hide input-second" data-key="userEmailList" required="">
+                    </div>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">邮件正文</label>
+                <div class="controls">
+                    <textarea placeholder="编辑邮件正文..." id="mail-content" data-key="mailContent"></textarea>
+                </div>
+            </div>
+            <div><!-- class="pull-right" -->
+                <p>
+                    <a id="mail-confirm" class="btn btn-primary" data-loading="正在保存...">确定</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

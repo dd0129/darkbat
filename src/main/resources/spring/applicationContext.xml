@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:task="http://www.springframework.org/schema/task"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context-3.0.xsd
+						http://www.springframework.org/schema/aop
+						http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+						http://www.springframework.org/schema/tx
+						http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+						http://www.springframework.org/schema/task
+						http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+
+    <context:annotation-config />
+    <context:component-scan base-package="com.dianping" />
+    <aop:aspectj-autoproxy />
+
+    <!-- MYSQL - DianPingDW -->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName">
+            <value>${JDBC.driver}</value>
+        </property>
+        <property name="url">
+            <value>${JDBC.url}</value>
+        </property>
+        <property name="username">
+            <value>${JDBC.username}</value>
+        </property>
+        <property name="password">
+            <value>${JDBC.password}</value>
+        </property>
+    </bean>
+
+    <!-- MYSQL - DPDict(used by AutoETL) -->
+    <bean id="mysql-dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName">
+            <value>${MYSQL.JDBC.driver}</value>
+        </property>
+        <property name="url">
+            <value>${MYSQL.JDBC.url}</value>
+        </property>
+        <property name="username">
+            <value>${MYSQL.JDBC.username}</value>
+        </property>
+        <property name="password">
+            <value>${MYSQL.JDBC.password}</value>
+        </property>
+    </bean>
+
+    <!-- GP57 -->
+    <bean id="gp-dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName">
+            <value>${GP.JDBC.driver}</value>
+        </property>
+        <property name="url">
+            <value>${GP.JDBC.url}</value>
+        </property>
+        <property name="username">
+            <value>${GP.JDBC.username}</value>
+        </property>
+        <property name="password">
+            <value>${GP.JDBC.password}</value>
+        </property>
+    </bean>
+    
+    <!-- POSTGRE REPORT SERVER add by xiaom -->
+    <bean id="report-dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName">
+            <value>${REPORT.JDBC.driver}</value>
+        </property>
+        <property name="url">
+            <value>${REPORT.JDBC.url}</value>
+        </property>
+        <property name="username">
+            <value>${REPORT.JDBC.username}</value>
+        </property>
+        <property name="password">
+            <value>${REPORT.JDBC.password}</value>
+        </property>
+    </bean>
+
+    <!-- Hive Meta -->
+    <bean id="hive-dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName">
+            <value>${HIVE.JDBC.driver}</value>
+        </property>
+        <property name="url">
+            <value>${HIVE.JDBC.url}</value>
+        </property>
+        <property name="username">
+            <value>${HIVE.JDBC.username}</value>
+        </property>
+        <property name="password">
+            <value>${HIVE.JDBC.password}</value>
+        </property>
+    </bean>
+
+    <!-- Hive Predeploy Meta -->
+    <bean id="hivepredeploy-dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName">
+            <value>${HIVE_PREDEPLOY.JDBC.driver}</value>
+        </property>
+        <property name="url">
+            <value>${HIVE_PREDEPLOY.JDBC.url}</value>
+        </property>
+        <property name="username">
+            <value>${HIVE_PREDEPLOY.JDBC.username}</value>
+        </property>
+        <property name="password">
+            <value>${HIVE_PREDEPLOY.JDBC.password}</value>
+        </property>
+    </bean>
+
+    <!-- transaction -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    <aop:config>
+        <aop:pointcut expression="execution(* com.dianping.darkbat.service.*.*(..))" id="transactionPointcut" />
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="transactionPointcut" />
+    </aop:config>
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="*" />
+        </tx:attributes>
+    </tx:advice>
+    <task:annotation-driven/>
+    <task:scheduled-tasks>
+        <task:scheduled ref="slaSchJob" method="schRun"
+                        cron="0 30 22 * * ?" />
+    </task:scheduled-tasks>
+</beans>

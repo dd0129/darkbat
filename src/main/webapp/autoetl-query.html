@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>调度系统</title>
+
+<!-- Le styles -->
+<link rel="Stylesheet" href="../pluto/resource/css/halley-common.css">
+<link rel="Stylesheet" href="../pluto/resource/css/bootstrap.min.css">
+<link rel="Stylesheet" href="../pluto/resource/css/bootstrap-responsive.min.css" />
+<link rel="Stylesheet" href="resource/css/darkbat-common.css">
+
+<!-- Le fav and touch icons -->
+<link rel="Shortcut Icon" href="../pluto/resource/img/icon.png" type="image/x-icon">
+<style type="text/css">
+	.selector-form .control-group { padding-top: 9px; margin-bottom: 9px; }
+	.selector-form .control-label { width: 55px; }
+	.selector-form .controls { margin-left: 70px; }
+	.selector-form .form-actions { padding-left: 65px; }
+	.selector-form select { width: 150px; }
+	.selector-form input { width: 140px; }
+	.table th,.table td { text-align: center; }
+	.modal-body { max-height: none; }
+	.bg-white { background-color: white; }
+	.bg-whitesmoke { background-color: whitesmoke; }
+	body, input, select, textarea { font-family: 'Courier New'; }
+	tfoot .add-row-btn { float: right; margin-right: 20px; }
+</style>
+</head>
+<body>
+<div id="navbar-global" class="navbar navbar-fixed-top"></div>
+<div class="container">
+	<div id="bread-crumb"></div>
+	<div class="row">
+		<div class="span3">
+			<div class="well well-large">
+				<form class="form-horizontal selector-form">
+					<div class="control-group">
+						<label class="control-label">数据源</label>
+						<div class="controls" >
+							<select id="selector-datasource-type">
+								<option value="">--选择全部--</option>
+								<option value="hive">hive</option>
+								<!-- <option value="greenplum">greenplum</option> -->
+								<option value="mysql">mysql</option>
+								<option value="sqlserver">sqlserver</option>
+								<!--<option value="salesforce">salesforce</option>-->
+							</select>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">数据库</label>
+						<div class="controls">
+							<select id="selector-database-name">
+								<option value="">--选择全部--</option>
+							</select>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">表名</label>
+						<div class="controls">
+							<input type="text" id="selector-table-name" placeholder="模糊查询..." />
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="controls">
+							<button type="submit" id="search-btn" class="btn btn-large btn-primary pull-right">开始查询</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<hr />
+			<div>
+<pre><strong>注意事项：</strong>
+1. 在查询前需要选择对应表的数据源
+2. 显示列“已上调度”
+  -/-：在hive和gp上均未配置入库任务
+  -/gp：只在gp上配置入库任务
+  hive/-：只在hive上配置入库任务
+  hive/gp：在hive和gp上已配置入库任务</pre>
+			</div>
+		</div>
+		<div class="span9">
+			<div id="result-info"></div>
+			<div class="pager-ele"></div>
+			<table id="result-table" class="table table-striped">
+				<thead>
+					<tr class="whitesmoke">
+						<th>数据源</th>
+						<th><div style="text-align:left;">数据库名</div></th>
+						<th><div style="text-align:left;">表名</div></th>
+						<th>记录数</th>
+						<th>已上调度</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody id="result-body"><!-- class="fade in" -->
+				</tbody>
+			</table>
+			<div class="pager-ele"></div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="../pluto/resource/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="../pluto/resource/js/halley-global.js"></script>
+<script type="text/javascript" src="../pluto/resource/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../pluto/resource/js/halley-common.js"></script>
+<script type="text/javascript" src="../pluto/resource/js/halley-prototype.js"></script>
+<script type="text/javascript" src="resource/js/task-common.js"></script>
+<script type="text/javascript" src="resource/js/autoetl-query.js"></script>
+</body>
+</html>

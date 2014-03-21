@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dianping.darkbat.mapper.TabbuildMapper">  
+	<select id="getColumnList" parameterType="Map" resultType="ColumnEntity">
+		SELECT C.INTEGER_IDX+1 as columnKey
+		      ,C.COLUMN_NAME as columnName
+		      ,C.TYPE_NAME as columnType
+		      ,C.COMMENT as columnComment
+		FROM TBLS T
+            ,COLUMNS_V2 C
+            ,SDS S
+            ,DBS D
+        <where>
+		T.SD_ID = S.SD_ID
+     	AND T.DB_ID=D.DB_ID
+     	AND S.CD_ID = C.CD_ID 
+     	AND T.TBL_NAME = #{tableName}
+     	AND D.NAME=#{databaseName} 
+    	ORDER BY C.INTEGER_IDX 
+    	</where>
+	</select>
+	<select id="getPartitionKey" parameterType="Map" resultType="ColumnEntity">
+		SELECT P.INTEGER_IDX+1 as columnKey  
+			  ,P.PKEY_NAME as columnName
+			  ,P.PKEY_TYPE as columnType
+			  ,P.PKEY_COMMENT as columnComment
+		FROM TBLS T
+            ,PARTITION_KEYS P
+            ,DBS D
+        <where>
+		    T.TBL_ID =P.TBL_ID
+     	AND T.DB_ID=D.DB_ID
+     	AND T.TBL_NAME = #{tableName}
+     	AND D.NAME=#{databaseName} 
+		ORDER BY P.INTEGER_IDX
+		</where>
+	</select>
+	<select id="getTableInfo" parameterType="Map" resultType="TableInfo">
+		select 
+     		  a.TBL_TYPE as tableType 
+     		 ,b.LOCATION as tableLocation
+     		 ,b.INPUT_FORMAT as tableInputformat
+     		 ,b.OUTPUT_FORMAT as tableOutputformat 
+     		 ,b.NUM_BUCKETS as tableBucketsNum
+     		 ,c.SLIB as tableSerde
+     		 ,d.PARAM_VALUE as tableComment
+     		 ,e.tableFielddlim
+     		 ,e.tableColelctiondelim
+     		 ,e.mapKeydelim
+     		 ,e.serializationFormat
+     		 ,e.tableLinedelim 
+     		 ,f.tableBucketscol
+     		 ,g.tableSortcol 
+		from TBLS a 
+		JOIN SDS b on(a.SD_ID = b.SD_ID)
+		LEFT JOIN SERDES c on(b.SERDE_ID = c.SERDE_ID)
+		LEFT JOIN TABLE_PARAMS d on(a.TBL_ID = d.TBL_ID and d.PARAM_KEY='comment') 
+		LEFT JOIN (select SERDE_ID
+      					,MAX(case when PARAM_KEY = 'field.delim' then ASCII(PARAM_VALUE) else null end) AS tableFielddlim
+      					,MAX(case when PARAM_KEY = 'colelction.delim' then ASCII(PARAM_VALUE) else null end) AS tableColelctiondelim
+      					,MAX(case when PARAM_KEY = 'mapkey.delim' then ASCII(PARAM_VALUE) else null end) AS mapKeydelim
+      					,MAX(case when PARAM_KEY = 'serialization.format' then ASCII(PARAM_VALUE) else null end) AS serializationFormat
+      					,MAX(case when PARAM_KEY = 'serialization.null.format' then ASCII(PARAM_VALUE) else 0 end) AS tableLinedelim
+     			 from SERDE_PARAMS 
+     			group by SERDE_ID
+     	) e
+  		on( b.SERDE_ID = e.SERDE_ID)
+		left join (select SD_ID
+                        ,substring(GROUP_CONCAT(BUCKET_COL_NAME),1,4000)  as tableBucketscol 
+                from BUCKETING_COLS 
+                group by SD_ID
+                ) f
+  		on(a.SD_ID = f.SD_ID)
+		left join (SELECT SD_ID
+                         ,SUBSTRING(GROUP_CONCAT(CONCAT(COLUMN_NAME,CASE when `ORDER` = 1 then ' ASC' else ' DESC' END)),1,4000)  as tableSortcol 
+              FROM SORT_COLS 
+              group by SD_ID
+              ) g
+		on(a.SD_ID = g.SD_ID)
+		join DBS h
+		on(a.DB_ID = h.DB_ID)
+		<where>
+     	    a.TBL_NAME = #{tableName}
+     	   AND h.NAME=#{databaseName} 
+		</where>  
+	</select>
+	<select id="ifTableExist" parameterType="Map" resultType="int">
+		SELECT count(*)
+		FROM TBLS T
+		    ,DBS D
+        <where>
+		    T.DB_ID=D.DB_ID
+     	AND T.TBL_NAME = #{tableName}
+     	AND D.NAME=#{databaseName} 
+		</where>
+	</select>
+</mapper>

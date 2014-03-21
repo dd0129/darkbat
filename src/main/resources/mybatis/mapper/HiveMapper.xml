@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dianping.darkbat.mapper.HiveMapper">
+	
+	<resultMap id="TableEntityMap" type="TableEntity">
+		<result property="datasourceType" column="datasource_type" />
+		<result property="databaseName" column="database_name" />
+		<result property="tableName" column="table_name" />
+		<result property="tableRows" column="table_rows" />
+	</resultMap>
+	
+	<resultMap id="ColumnEntityMap" type="ColumnEntity">
+		<result property="columnName" column="column_name" />
+		<result property="columnType" column="column_type" />
+		<result property="columnKey" column="column_key" />
+		<result property="columnComment" column="column_comment" />
+	</resultMap>
+
+	<select id="getAllDatabase" resultType="String">
+    	SELECT DISTINCT name
+    	FROM DBS
+	</select>
+
+    <select id="searchTable" parameterType="Map" resultMap="TableEntityMap">
+    	SELECT 'hive' AS datasource_type,b.name AS database_name,a.tbl_name AS table_name,'' AS table_rows
+    	FROM TBLS a,DBS b
+		<where>
+    		a.db_id=b.db_id
+    		<if test="table.databaseName != null">AND b.name=#{table.databaseName}</if>
+    		<if test="table.tableName != null">AND LOWER(a.tbl_name) LIKE '%${table.tableName}%'</if>
+		</where>
+		<if test="limit != null and offset != null">LIMIT #{offset},#{limit}</if>
+	</select>
+
+	<select id="searchTableCount" parameterType="Map" resultType="Integer">
+		SELECT COUNT(*)
+		FROM TBLS a,DBS b
+		<where>
+    		a.db_id=b.db_id
+    		<if test="table.databaseName != null">AND b.name=#{table.databaseName}</if>
+    		<if test="table.tableName != null">AND LOWER(a.tbl_name) LIKE '%${table.tableName}%'</if>
+		</where>
+	</select>
+
+	<select id="getAllColumn" parameterType="Map" resultMap="ColumnEntityMap">
+		SELECT * FROM (
+			SELECT a.column_name AS column_name,a.type_name AS column_type,'' AS column_key,a.comment AS column_comment
+			FROM
+				COLUMNS_V2 a 
+				JOIN SDS c ON a.cd_id=c.cd_id
+				JOIN TBLS b ON c.sd_id=b.sd_id
+				JOIN DBS d ON b.db_id=d.db_id
+			<where>
+				d.name=#{table.databaseName} AND tbl_name=#{table.tableName}
+			</where>
+			ORDER BY a.integer_idx
+		) z
+		UNION ALL
+		SELECT
+			a.PKEY_NAME AS column_name,a.PKEY_TYPE AS column_type,'' AS column_key,'' AS character_maximum_length
+		FROM PARTITION_KEYS a
+			JOIN TBLS b ON (a.TBL_ID = b.TBL_ID)
+			JOIN DBS c ON (b.DB_ID = c.DB_ID)
+		<where>
+			b.TBL_NAME=#{table.tableName} AND c.NAME=#{table.databaseName}
+		</where>
+	</select>
+</mapper>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>邮件配置</title>
+
+    <link rel="shortcut icon" href="http://data.dp/pluto/resource/img/icon.png">
+    <link rel="Stylesheet" href="http://data.dp/pluto/resource/css/bootstrap.min.css">
+    <link rel="Stylesheet" href="http://data.dp/pluto/resource/css/bootstrap-responsive.min.css" />
+    <link rel="Stylesheet" href="http://data.dp/pluto/resource/css/halley-common.css" />
+    <link rel="Stylesheet" href="http://data.dp/pluto/resource/css/zTreeStyle/zTreeStyle.css"/>
+    <style type="text/css">
+        .btn-add-row {
+            margin-left: 457px;
+        }
+        .hide {
+            display: none!important;
+        }
+        #mail-content {
+            width: 360px;
+            height: 100px;
+        }
+        #mail-confirm {
+            margin-left: 158px;
+        }
+        #mail-add {
+            margin-left: 24px;
+        }
+        .btn-info-action {
+            padding-left: 90px;
+        }
+        .btn-info-action-edit {
+            padding: 20px 0 0 160px;
+        }
+        #user-mail-list {
+            width: 360px;
+            height: 150px;
+        }
+        .help-inline-13 {
+            font-size: 12px;
+        }
+        .padding-label {
+            padding-top: 5px;
+        }
+        .checkbox-inline {
+            display: inline-block;
+            padding: 5px 20px 0 0;
+            margin-bottom: 0;
+            vertical-align: middle;
+        }
+        .info-box .content-box {
+            line-height:28px;
+        }
+        #report-choose-modal .ztree li a {
+            cursor: default;
+        }
+        #report-choose-modal .ztree li a:hover {
+            text-decoration: none;
+        }
+        #report-choose-modal .ztree li a.curSelectedNode {
+            background-color: transparent;
+            opacity: 1;
+            padding-top: 1px;
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="navbar-global" class="navbar navbar-fixed-top"></div>
+    <div class="main-content fade">
+        <div class="container content">
+            <div id="bread-crumb"></div>
+            <div class="row">
+                <div class="span3">
+                    <div class="well">
+                        <div id="mail-list">
+                            <ul id="mail-tree" class="ztree"></ul>
+                            <p class="btn-action"><a id="mail-add" class="btn btn-primary CLICKABLE">新建邮件报表</a></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="span9">
+                    <div id="mail-designer-container" class="well">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="container">
+                <p>Designed and built with all the love in the world by <a href="http://wiki.dianpingoa.com/bin/view/%E6%95%B0%E6%8D%AE%E5%B9%B3%E5%8F%B0/WebHome" target="_blank">@DataDP</a>.</p>
+                <p>If you have any questions please contact <a href="mailto:#">data.dp@dianping.com</a>.</p>
+            </div>
+        </div>
+    </div>
+
+    <script 
+        type="text/javascript" 
+        data-main="/darkbat/resource/js/main/main.mail.config"
+        data-config="/darkbat/resource/js/config/sea.config"
+        src="http://data.dp/pluto/resource/js/sea/sea-debug.js">
+    </script>
+</body>
+</html>

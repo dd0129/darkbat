@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dianping.darkbat.mapper.TaskMapper">
+	<sql id="table">etl_task_cfg</sql>
+	
+	<resultMap id="TaskEntityMap" type="TaskEntity">
+		<id property="taskId" column="task_id" />
+		<result property="taskName" column="task_name" />
+		<result property="tableName" column="table_name" />
+		<result property="remark" column="remark" />
+		<result property="databaseSrc" column="database_src" />
+		<result property="taskObj" column="task_obj" />
+		<result property="para1" column="para1" />
+		<result property="para2" column="para2" />
+		<result property="para3" column="para3" />
+		<result property="recallLimit" column="recall_limit" />
+		<result property="recallInterval" column="recall_interval" />
+		<result property="logHome" column="log_home" />
+		<result property="logFile" column="log_file" />
+		<result property="taskGroupId" column="task_group_id" />
+		<result property="cycle" column="cycle" />
+		<result property="prioLvl" column="prio_lvl" />
+		<result property="ifPre" column="if_pre" />
+		<result property="ifRecall" column="if_recall" />
+		<result property="ifWait" column="if_wait" />
+		<result property="ifVal" column="if_val" />
+		<result property="timeout" column="timeout" />
+		<result property="addUser" column="add_user" />
+		<result property="addTime" column="add_time" />
+		<result property="updateUser" column="update_user" />
+		<result property="updateTime" column="update_time" />
+		<result property="type" column="type" />
+		<result property="offset" column="offset" />
+		<result property="offsetType" column="offset_type" />
+		<result property="freq" column="freq" />
+		<result property="owner" column="owner" />
+		<result property="waitCode" column="wait_code" />
+		<result property="recallCode" column="recall_code" />
+		<result property="successCode" column="success_code" />
+	</resultMap>
+
+	<select id="getTask" resultMap="TaskEntityMap">
+		SELECT *
+		FROM <include refid="table" />
+	</select>
+	
+	<select id="getTaskId" resultType="Integer">
+		SELECT task_id
+		FROM <include refid="table" />
+	</select>
+	
+	<insert id="insertTask" parameterType="TaskEntity">
+		INSERT INTO <include refid="table" />
+		(
+			task_id,task_name,table_name,
+			remark,database_src,task_obj,
+			para1,para2,para3,
+			recall_limit,recall_interval,log_home,
+			log_file,task_group_id,cycle,
+			prio_lvl,if_pre,if_recall,if_wait,
+			if_val,add_user,add_time,update_user,
+			update_time,type,offset,timeout,
+			offset_type,freq,owner,wait_code,
+			recall_code,success_code
+		)
+		VALUES
+		(
+			#{taskId},#{taskName},#{tableName},
+			#{remark},#{databaseSrc},#{taskObj},
+			#{para1},#{para2},#{para3},
+			#{recallLimit},#{recallInterval},#{logHome},
+			#{logFile},#{taskGroupId},#{cycle},
+			#{prioLvl},#{ifPre},#{ifRecall},#{ifWait},
+			#{ifVal},#{addUser},#{addTime},#{updateUser},
+			#{updateTime},#{type},#{offset},#{timeout},
+			#{offsetType},#{freq},#{owner},#{waitCode},
+			#{recallCode},#{successCode}
+		)
+	</insert>
+
+    <select id="getTaskByName" parameterType="String" resultMap="TaskEntityMap">
+        SELECT *
+        FROM <include refid="table" />
+        <where>
+            LOWER(task_name) = LOWER('${taskName}')
+        </where>
+    </select>
+    
+    <select id="getTaskById" parameterType="Integer" resultMap="TaskEntityMap">
+        SELECT *
+        FROM <include refid="table" />
+        <where>
+            task_id = #{taskId}
+        </where>
+    </select>
+
+	<select id="searchTask" parameterType="Map" resultMap="TaskEntityMap">
+		SELECT *
+		FROM <include refid="table" />
+		<where>
+			<if test="task != null">
+				<if test="task.taskId != null">AND task_id = #{task.taskId}</if>
+				<if test="task.taskName != null and task.taskName != '' ">AND (LOWER(task_name) like LOWER('%${task.taskName}%') OR task_id = '${task.taskName}')</if>
+				<if test="task.taskGroupId != null">AND task_group_id = #{task.taskGroupId}</if>
+				<if test="task.cycle != null and task.cycle != '' ">AND cycle = #{task.cycle}</if>
+				<if test="task.owner != null and task.owner != '' ">AND owner = #{task.owner}</if>
+				<if test="task.ifVal != null ">AND if_val = #{task.ifVal}</if>
+				<if test="task.databaseSrc != null and task.databaseSrc != '' ">AND database_src = #{task.databaseSrc}</if>
+			</if>
+		</where>
+		<if test="sort != null and sort != '' ">ORDER BY ${sort}</if>
+		<if test="limit != null and offset != null">LIMIT #{offset},#{limit}</if>
+	</select>
+	
+	<select id="searchTaskCount" parameterType="Map" resultType="Integer">
+		SELECT COUNT(*)
+		FROM <include refid="table" />
+		<where>
+			<if test="task != null">
+				<if test="task.taskId != null">AND task_id = #{task.taskId}</if>
+				<if test="task.taskName != null and task.taskName != '' ">AND (LOWER(task_name) like LOWER('%${task.taskName}%') OR task_id = '${task.taskName}')</if>
+				<if test="task.type != null">AND type = #{task.type}</if>
+				<if test="task.taskGroupId != null">AND task_group_id = #{task.taskGroupId}</if>
+				<if test="task.cycle != null and task.cycle != '' ">AND cycle = #{task.cycle}</if>
+				<if test="task.owner != null and task.owner != '' ">AND owner = #{task.owner}</if>
+				<if test="task.ifVal != null ">AND if_val = #{task.ifVal}</if>
+				<if test="task.databaseSrc != null and task.databaseSrc != '' ">AND database_src = #{task.databaseSrc}</if>
+			</if>
+		</where>
+	</select>
+	
+	<update id="updateTask" parameterType="Map" >
+		UPDATE <include refid="table" />
+        <set>
+            task_name = #{task.taskName},
+            table_name = #{task.tableName},
+            remark = #{task.remark},
+            database_src = #{task.databaseSrc},
+            <!--task_obj = #{task.taskObj},-->
+            para1 = #{task.para1},
+            para2 = #{task.para2},
+            para3 = #{task.para3},
+            recall_limit = #{task.recallLimit},
+            recall_interval = #{task.recallInterval},
+            log_home = #{task.logHome},
+            log_file = #{task.logFile},
+            task_group_id = #{task.taskGroupId},
+            cycle = #{task.cycle},
+            prio_lvl = #{task.prioLvl},
+            if_pre = #{task.ifPre},
+            if_recall = #{task.ifRecall},
+            if_wait = #{task.ifWait},
+            if_val = #{task.ifVal},
+            update_user = #{task.updateUser},
+            update_time = #{task.updateTime},
+            type = #{task.type},
+            offset = #{task.offset},
+            offset_type = #{task.offsetType},
+            timeout = #{task.timeout},
+            freq = #{task.freq},
+            owner = #{task.owner},
+            wait_code = #{task.waitCode},
+            recall_code = #{task.recallCode},
+            success_code = #{task.successCode}
+        </set>
+		<where>
+            task_id = #{task.taskId}
+        </where>
+	</update>
+
+	<select id="getAllTaskBasicInfo" parameterType="Map" resultMap="TaskEntityMap">
+		SELECT task_group_id,task_id,task_name,cycle
+		FROM <include refid="table" />
+	</select>
+	
+	<select id="getParentTableList" parameterType="Integer" resultType="String">
+		select CONCAT_WS('/',MAX(line_num),parent_tab) 
+		from pedigree_analyze_result
+		<where> 
+		task_id = #{taskId} 
+		and add_time >= CURDATE()
+		</where> 
+		group by parent_tab
+	</select>
+	
+	<select id="getTargetTableList" parameterType="Integer" resultType="String">
+		select CONCAT_WS('/',MAX(line_num),child_tab)  
+		from pedigree_analyze_result
+		<where> 
+		task_id = #{taskId} 
+		and add_time >= CURDATE()
+		</where> 
+		group by child_tab
+	</select>
+	
+	<select id="getParentTaskIdList" parameterType="Map" resultType="Integer">
+		select a.task_id  
+		from mc_data_task_map a,
+		     mc_table_info b
+		<where> 
+	         a.table_id = b.table_id
+	     and b.storage_type = 'hive'
+	     and b.table_name in
+	        <foreach collection="list" item="taskParentTableList"  open="(" separator="," close=")">  
+                 #{taskParentTableList}  
+            </foreach>    
+		</where>
+		group by a.task_id 
+	</select>
+	
+	<select id="getTaskParentTableList" parameterType="Map" resultType="String">
+		select b.table_name  
+		from mc_data_task_map a,
+		     mc_table_info b
+		<where> 
+	         a.table_id = b.table_id
+	     and b.storage_type = 'hive'
+	     and a.task_id in
+	        <foreach collection="list" item="taskParentTaskIdList"  open="(" separator="," close=")">  
+                 #{taskParentTaskIdList}  
+            </foreach>    
+		</where>
+		group by b.table_name 
+	</select>
+	
+	<insert id="insertDataTaskMap" parameterType="Map">
+		INSERT INTO mc_data_task_map
+        (table_id,database_name,task_id,add_time,update_time)
+        values
+        (#{tableId},'hdfs',#{taskId},CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)
+	</insert>
+	
+	<insert id="insertDataMap" parameterType="Map">
+		INSERT INTO mc_data_map
+        (id,parent_id,map_type,add_time,update_time)
+        values
+        (#{tableId},#{parentTableId},2,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP)
+	</insert>
+	
+	<select id="getTableIdFromName" parameterType="Map" resultType="Integer">
+		SELECT table_id
+		FROM mc_table_info
+		<where> 
+	        table_name = #{tableName}
+	    and storage_type = 'hive'   
+		</where>
+	</select>
+	
+	<update id="updateTaskTableStatus" parameterType="Map" >
+		UPDATE mc_table_info a
+		JOIN   mc_data_task_map b
+		ON   (a.table_id = b.table_id) 
+        <set>
+             a.is_validate = #{status}
+        </set>
+		<where>
+            b.task_id = #{taskId}
+        </where>
+	</update>
+	
+	<update id="invalidateTask" parameterType="Integer">
+		UPDATE <include refid="table" />
+        <set>
+            if_val = 2,
+        </set>
+		<where>
+            task_id = #{taskId}
+        </where>
+	</update>
+
+    <select id="searchRuleByDB" parameterType="Map" resultType="String">
+        select regex from etl_database_rule
+        <where>
+            database_name = #{databaseName}
+        </where>
+    </select>
+    
+    <select id="getColumnList" parameterType="Map" resultType="ColumnEntity">
+		SELECT a.column_rn as columnKey
+      		  ,a.column_name as columnName
+              ,a.column_type as columnType
+              ,case when upper(a.column_desc) = 'NULL' then null else a.column_desc end as columnComment		
+		FROM mc_column_info a,
+			 mc_table_info b
+        <where>
+		     a.table_id = b.table_id
+		 and b.storage_type ='hive'
+		 and b.table_name = #{tableName}
+    	</where>
+	</select>
+	
+</mapper>

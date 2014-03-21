@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dianping.darkbat.mapper.TaskStatusMapper">
+    <sql id="table1">etl_task_status</sql>
+    <sql id="table2">etl_taskrela_status</sql>
+
+    <select id="getTaskStatusEntityByDate" parameterType="Map" resultType="TaskStatusEntity">
+        select task_status_id,task_name,status,cycle,trigger_time
+        from <include refid="table1"/>
+        where time_id = #{date}
+        <if test="taskStatusEntity!=null">
+          <if test="taskStatusEntity.onlyself == 1 and taskStatusEntity.owner !=null">and owner=#{taskStatusEntity.owner}</if>
+          <if test="taskStatusEntity.prio_lvl != null and taskStatusEntity.prio_lvl == -1">and prio_lvl &lt;=1</if>
+        </if>
+    </select>
+    
+    <select id="getTaskStatusWithTimeInterval" parameterType="Map" resultType="TaskStatusEntity">
+        select task_status_id,task_name,status,task_id,time_id,cycle,trigger_time
+        from <include refid="table1"/>
+        where task_id in
+        <foreach collection="taskIdsList" open="(" close=")" separator="," item="taskId">
+            #{taskId}
+        </foreach>
+        <if test="taskStatusEntity != null">
+            <if test="taskStatusEntity.cycle != null and taskStatusEntity.cycle != '' ">and cycle = #{taskStatusEntity.cycle}</if>
+            <if test="taskStatusEntity.status != null and taskStatusEntity.status != -2">and status = #{taskStatusEntity.status}</if>
+            <if test="taskStatusEntity.status == -2">and status != 1</if>
+            <if test="taskStatusEntity.owner != null and taskStatusEntity.owner != '' ">and owner = #{taskStatusEntity.owner}</if>
+        </if>
+        and time_id between #{startDate} and #{endDate}
+        order by time_id desc
+    </select>
+    
+    <select id="getTaskStatusEntityByTaskStatusId" parameterType="Map" resultType="TaskStatusEntity">
+        select task_status_id,task_name,status,cycle,trigger_time
+        from <include refid="table1"/>
+        where task_status_id in 
+        <foreach collection="list" open="(" close=")" separator="," item="taskStatusId">
+            #{taskStatusId}
+        </foreach>
+    </select>
+    
+    <select id="getPrerunTaskStatusEntityByTaskId" parameterType="String" resultType="TaskStatusEntity">
+        select task_status_id,task_name,status,sts_desc,cal_dt,task_id
+        from <include refid="table1"/>
+        where task_id = #{taskId}
+        order by time_id desc, time_stamp desc 
+    </select>
+    
+    <select id="getAllRunningTaskIds" parameterType="Map" resultType="TaskStatusEntity">
+        select distinct task_id 
+        from <include refid="table1"/>
+        where sts_desc in ('RUNNING','INIT','WAIT','READY')
+        and task_id in
+        <foreach collection="list" open="(" close=")" separator="," item="taskIds">
+            #{taskIds}
+        </foreach>
+        order by task_id ASC
+    </select>
+    
+    <!-- 获取suspend状态 by chaos-->
+    <select id="getSuspendTaskIds" parameterType="Map" resultType="TaskStatusEntity">
+        select distinct task_id 
+        from <include refid="table1"/>
+        where status = 3 and sts_desc = 'FAIL'
+        and task_id in
+        <foreach collection="list" open="(" close=")" separator="," item="taskIds">
+            #{taskIds}
+        </foreach>
+        order by task_id ASC
+    </select>
+    
+    <select id="getSuccessTaskIds" parameterType="Map" resultType="TaskStatusEntity">
+        select distinct task_id 
+        from <include refid="table1"/>
+        where status = 1 and sts_desc = 'SUCCESS'
+        and task_id in
+        <foreach collection="list" open="(" close=")" separator="," item="taskIds">
+            #{taskIds}
+        </foreach>
+        and time_id = #{date}
+        order by task_id ASC
+    </select>
+    
+    <select id="getTaskStatusEntityByParam" parameterType="Map" resultType="TaskStatusEntity">
+        select task_status_id,task_name,status
+        from <include refid="table1"/>
+        <where>
+            time_id = #{date}
+            <if test="taskStatusEntity != null">
+                <if test="taskStatusEntity.task_name != null and taskStatusEntity.task_name != '' ">and (task_name like '%${taskStatusEntity.task_name}%' or task_id = #{taskStatusEntity.task_name})</if>
+                <if test="taskStatusEntity.cycle != null and taskStatusEntity.cycle != '' ">and cycle = #{taskStatusEntity.cycle}</if>
+                <if test="taskStatusEntity.status != null and taskStatusEntity.status != -2">and status = #{taskStatusEntity.status}</if>
+                <if test="taskStatusEntity.status == -2">and status != 1</if>
+                <if test="taskStatusEntity.prio_lvl != null and taskStatusEntity.prio_lvl == -1">and prio_lvl &lt;= 1</if>
+                <if test="taskStatusEntity.owner != null and taskStatusEntity.owner != '' ">and owner = #{taskStatusEntity.owner}</if>
+            </if>
+        </where>
+    </select>
+    
+    <select id="getTaskStatusEntityInfoByTaskStatusId" parameterType="Map" resultType="TaskStatusEntity">
+        select task_status_id,task_id,task_name,status,log_path,cycle,owner,recall_num,run_num,start_time,end_time,time_id,prio_lvl
+        from <include refid="table1"/>
+        where task_status_id in 
+        <foreach collection="list" open="(" close=")" separator="," item="taskStatusId">
+            #{taskStatusId}
+        </foreach>
+    </select>
+    
+    <select id="getTaskRelaStatusByTaskStatusId" parameterType="Map" resultType="Map">
+        select task_status_id,pre_sts_id
+        from <include refid="table2"/>
+        where 
+        task_status_id in
+        <foreach collection="list" open="(" close=")" separator="," item="taskStatusId">
+            #{taskStatusId}
+        </foreach>
+        or pre_sts_id in
+        <foreach collection="list" open="(" close=")" separator="," item="taskStatusId">
+            #{taskStatusId}
+        </foreach>
+    </select>
+    
+    <update id="rerunTaskByID">
+        UPDATE <include refid="table1"/>
+        <set>
+            status = 0 AND sts_desc = 'INIT'
+        </set>
+        <where>
+            task_status_id = #{taskStatusId} 
+            AND status IN (1, -1, 3, 5)
+        </where>
+    </update>
+
+    <update id="raisePriorityByID">
+        UPDATE <include refid="table1"/>
+        <set>
+            running_prio=400
+        </set>
+        <where>
+            task_status_id = #{taskStatusId}
+            AND running_prio &lt;400
+        </where>
+    </update>
+    
+    <update id="rerunMultiJobs">
+        UPDATE <include refid="table1"/>
+        <set>
+            status = 0 AND sts_desc = 'INIT'
+        </set>
+        <where>
+            task_id IN (${idsString})
+            AND time_id between #{startDate} and #{endDate}
+            AND status IN (1, -1, 3, 5)
+        </where>
+    </update>
+    
+    <update id="modifyTaskByID">
+        UPDATE <include refid="table1"/>
+        <set>
+            status = #{status}
+        </set>
+        <where>
+            task_status_id = #{taskStatusId}
+            <!-- AND status IN (${statusAllowList}) -->
+        </where>
+    </update>
+
+    <update id="updateTaskStatus">
+        UPDATE <include refid="table1"/>
+        <set>
+            status = 3
+        </set>
+        <where>
+            task_id = #{taskId} and task_status_id like 'pre_%' and status in (0,6);
+            <!-- AND status IN (${statusAllowList}) -->
+        </where>
+    </update>
+
+
+
+    <insert id="insertTaskStatusEntity" parameterType="TaskStatusEntity">
+        insert into <include refid="table1"/>(
+            task_status_id,task_id,task_group_id,task_name,task_obj,
+            para1,para2,para3,log_path,cycle,
+            time_id,status,prio_lvl,run_num,type,
+            table_name,cal_dt,database_src,
+            if_pre,if_wait,if_recall,sts_desc,recall_num,
+            owner,trigger_time,recall_code,success_code,wait_code,
+            job_code,freq,timeout,recall_interval,
+            recall_limit,running_prio,time_stamp
+        )
+        values(
+            #{task_status_id},#{task_id},#{task_group_id},#{task_name},#{task_obj},
+            #{para1},#{para2},#{para3},#{log_path},#{cycle},
+            #{time_id},#{status},#{prio_lvl},#{run_num},#{type},
+            #{table_name},#{cal_dt},#{database_src},
+            #{if_pre},#{if_wait},#{if_recall},#{sts_desc},#{recall_num},
+            #{owner},#{trigger_time},#{recall_code},#{success_code},#{wait_code},
+            #{job_code},#{freq},#{timeout},#{recall_interval},#{recall_limit},#{running_prio},
+            now()
+        )
+    </insert>
+
+    <insert id="insertTaskStatusEntityList" parameterType="java.util.List">
+        insert into <include refid="table1"/>(
+            task_status_id,task_id,task_group_id,task_name,task_obj,
+            para1,para2,para3,log_path,cycle,
+            time_id,status,prio_lvl,run_num,type,
+            table_name,cal_dt,database_src,
+            if_pre,if_wait,if_recall,sts_desc,recall_num,
+            owner,trigger_time,recall_code,success_code,wait_code,
+            job_code,freq,timeout,recall_interval,
+            recall_limit,running_prio,time_stamp
+        )values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.task_status_id},#{item.task_id},#{item.task_group_id},#{item.task_name},#{item.task_obj},
+            #{item.para1},#{item.para2},#{item.para3},#{item.log_path},#{item.cycle},
+            #{item.time_id},#{item.status},#{item.prio_lvl},#{item.run_num},#{item.type},
+            #{item.table_name},#{item.cal_dt},#{item.database_src},
+            #{item.if_pre},#{item.if_wait},#{item.if_recall},#{item.sts_desc},#{item.recall_num},
+            #{item.owner},#{item.trigger_time},#{item.recall_code},#{item.success_code},#{item.wait_code},
+            #{item.job_code},#{item.freq},#{item.timeout},#{item.recall_interval},#{item.recall_limit},#{item.running_prio},
+            now()
+            )
+        </foreach>
+
+    </insert>
+
+    <insert id="insertTaskRelaStatusEntityList" parameterType="java.util.List">
+        insert into <include refid="table2"/>
+        (task_status_id,task_id,pre_sts_id,pre_id,time_stamp) values
+        <foreach collection="list" item="item" separator=",">
+            (
+            #{item.taskStatusId},
+            #{item.taskId},
+            #{item.preStsId},
+            #{item.preId},
+            now()
+            )
+        </foreach>
+    </insert>
+    
+</mapper>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dianping.darkbat.mapper.MySQLMapper">
+	<sql id="table">DP_TblInfo</sql>
+	
+	<resultMap id="TableEntityMap" type="TableEntity">
+		<result property="datasourceType" column="datasource_type" />
+		<result property="databaseName" column="database_name" />
+		<result property="tableName" column="table_name" />
+		<result property="tableRows" column="table_rows" />
+	</resultMap>
+
+	<select id="getAllDatabase" resultType="String">
+		SELECT distinct table_schema
+		FROM <include refid="table" />
+	</select>
+
+    <select id="searchTable" parameterType="Map" resultMap="TableEntityMap">
+		SELECT
+            'mysql' AS datasource_type,
+            table_schema AS database_name,
+            table_name AS table_name,
+            '' + table_rows AS table_rows
+		FROM <include refid="table" />
+		<where>
+			update_time > (
+				SELECT DATE(MAX(update_time)) FROM <include refid="table" />
+			)
+			<if test="table.databaseName != null">AND table_schema = #{table.databaseName}</if>
+			<if test="table.tableName != null">AND LOWER(table_name) LIKE '%${table.tableName}%'</if>
+		</where>
+		ORDER BY table_name
+		<if test="limit != null and offset != null">LIMIT #{offset},#{limit}</if>
+	</select>
+
+	<select id="searchTableCount" parameterType="Map" resultType="Integer">
+		SELECT COUNT(*)
+		FROM <include refid="table" />
+		<where>
+			update_time > (
+				SELECT DATE(MAX(update_time)) FROM <include refid="table" />
+			)
+			<if test="table.databaseName != null">AND table_schema = #{table.databaseName}</if>
+			<if test="table.tableName != null">AND LOWER(table_name) LIKE '%${table.tableName}%'</if>
+		</where>
+	</select>
+
+
+</mapper>

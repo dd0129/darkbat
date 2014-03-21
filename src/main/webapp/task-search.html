@@ -1,0 +1,126 @@
+<div class="modal-header">
+	<a class="close" data-dismiss="modal">&times;</a>
+	<h4>任务搜索</h4>
+</div>
+<div class="modal-body">
+	<div id="win-result-info"></div>
+	<div class="row">
+		<div class="span3">
+			<div class="well well-large">
+				<form class="form-horizontal selector-form">
+					<div class="control-group">
+						<label class="control-label">任务组</label>
+						<div class="controls" >
+							<select id="win-selector-task-group-id">
+								<option value="">--选择全部--</option>
+								<option value="1">wormhole</option>
+								<option value="2">mid/dim</option>
+								<option value="3">dm</option>
+								<option value="4">rpt</option>
+								<option value="5">mail</option>
+								<option value="6">dw</option>
+							</select>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">执行周期</label>
+						<div class="controls">
+							<select id="win-selector-cycle">
+								<option value="">--选择全部--</option>
+								<option value="Y">年</option>
+								<option value="S">季</option>
+								<option value="M">月</option>
+								<option value="W">周</option>
+								<option value="D">日</option>
+								<option value="H">时</option>
+								<option value="MI">分</option>
+							</select>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">开发者</label>
+						<div class="controls">
+							<select id="win-selector-owner">
+                                <option value="">--选择全部--</option>
+							</select>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">数据源</label>
+						<div class="controls">
+							<select id="win-selector-database-src">
+								<option value="">--选择全部--</option>
+								<option value="hive">hive</option>
+								<option value="gp57">gp57</option>
+								<option value="gp59">gp59</option>
+								<option value="greenplum">greenplum</option>
+								<option value="mongodb">mongodb</option>
+								<option value="mysql_analysis_result">mysql_analysis_result</option>
+								<option value="mysql_DianPing">mysql_DianPing</option>
+								<option value="mysql_DianPingAC">mysql_DianPingAC</option>
+								<option value="mysql_DianPingAudit">mysql_DianPingAudit</option>
+								<option value="mysql_DianPingBI">mysql_DianPingBI</option>
+								<option value="mysql_DianPingKV">mysql_DianPingKV</option>
+								<option value="mysql_DianPingLog">mysql_DianPingLog</option>
+								<option value="mysql_DianPingMobile">mysql_DianPingMobile</option>
+								<option value="mysql_DianPingPic">mysql_DianPingPic</option>
+								<option value="mysql_DianPingUC">mysql_DianPingUC</option>
+								<option value="mysql_DPAdwords">mysql_DPAdwords</option>
+								<option value="mysql_DPAPIReport">mysql_DPAPIReport</option>
+								<option value="mysql_dpedmlog">mysql_dpedmlog</option>
+								<option value="mysql_edm_mail">mysql_edm_mail</option>
+								<option value="mysql_MySQLDianPingGroup_dbo">mysql_MySQLDianPingGroup_dbo</option>
+								<option value="mysql_TuanGou2010">mysql_TuanGou2010</option>
+								<option value="mysql_TuanGou2010_220">mysql_TuanGou2010_220</option>
+								<option value="mysql_TuanGouMail">mysql_TuanGouMail</option>
+								<option value="mysql_TuanGou_Analytics">mysql_TuanGou_Analytics</option>
+								<option value="sqlserver_zSurvey_NET">sqlserver_zSurvey_NET</option>								
+							</select>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">是否生效</label>
+						<div class="controls">
+							<select id="win-selector-if-val">
+								<option value="">--选择全部--</option>
+								<option value="0">否</option>
+								<option value="1">是</option>
+								<option value="2">失效</option>
+							</select>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">任务名称</label>
+						<div class="controls">
+							<input type="text" id="win-selector-task-name" placeholder="模糊查询..." />
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="controls">
+							<button type="submit" id="win-search-btn" class="btn btn-large btn-primary pull-right">开始查询</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="span8">
+			<div id="win-result-info"></div>
+			<div id="win-pager-ele1" class="pager-ele"></div>
+			<table id="win-result-table" class="table table-striped">
+				<thead>
+					<tr class="whitesmoke">
+						<th>任务组</th>
+						<th>任务ID</th>
+						<th>任务名称</th>
+						<th>执行周期</th>
+						<th>开发者</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody id="win-result-body"><!-- class="fade in" -->
+				</tbody>
+			</table>
+			<div id="win-pager-ele2" class="pager-ele"></div>
+		</div>
+	</div>
+</div>

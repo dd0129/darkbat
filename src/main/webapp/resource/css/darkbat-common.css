@@ -1,0 +1,9 @@
+@CHARSET "UTF-8";
+.on-duty-list {
+	position: absolute;
+	right: 20px;
+	top: 10px;
+}
+#bread-crumb {
+	position: relative;
+}

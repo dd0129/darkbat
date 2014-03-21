@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>调度系统</title>
+
+<!-- Le styles -->
+<link rel="Stylesheet" href="../pluto/resource/css/halley-common.css">
+<link rel="Stylesheet" href="../pluto/resource/css/bootstrap.min.css">
+<link rel="Stylesheet" href="../pluto/resource/css/bootstrap-responsive.min.css" />
+<link rel="Stylesheet" href="resource/css/darkbat-common.css">
+
+<!-- Le fav and touch icons -->
+<link rel="Shortcut Icon" href="../pluto/resource/img/icon.png" type="image/x-icon">
+
+<style type="text/css">
+	.selector-form .control-group { padding-top: 9px; margin-bottom: 9px; }
+	.selector-form .control-label { width: 55px; }
+	.selector-form .controls { margin-left: 70px; }
+	.selector-form .form-actions { padding-left: 65px; }
+	.selector-form select { width: 150px; }
+	.selector-form input { width: 140px; }
+	.basic-form .control-group { margin-bottom: 6px; }
+	.breadcrumb .active { color: #999; }
+	/**.navbar .brand { font-size: 24px; font-family: Ravie,Snap ITC,Arial Black; font-weight: bold; font-stretch: wider; color: #FFFFFF; padding: 8px 40px 12px; }
+	.nav-collapse li { font-size: 15px; font-weight: bold; font-family: Microsoft YaHei,微软雅黑,黑体; padding: 2px 2px 2px 2px; }**/
+	.table th,.table td { text-align: center; }
+	.modal-body { max-height: none; }
+	.bg-white { background-color: white; }
+	.bg-whitesmoke { background-color: whitesmoke; }
+	body, input, select, textarea { font-family: 'Courier New'; }
+	tfoot .add-row-btn { float: right; margin-right: 20px; }
+</style>
+</head>
+<body>
+<!--.modal { width:1000px; margin-left:-500px; }-->
+<div id="navbar-global" class="navbar navbar-fixed-top"></div>
+<div class="container">
+	<div id="bread-crumb"></div>
+	
+	<div class="row">
+		<div class="span3">
+			<div class="well well-large">
+				<form class="form-horizontal selector-form">
+					<div class="control-group">
+						<label class="control-label">任务组</label>
+						<div class="controls" >
+							<select id="selector-task-group-id">
+								<option value="">--选择全部--</option>
+								<option value="1">wormhole</option>
+								<option value="2">mid/dim</option>
+								<option value="3">dm</option>
+								<option value="4">rpt</option>
+								<option value="5">mail</option>
+								<option value="6">dw</option>
+                                <option value="7">DQ</option>
+                                <option value="8">atom</option>
+							</select>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">执行周期</label>
+						<div class="controls">
+							<select id="selector-cycle">
+								<option value="">--选择全部--</option>
+								<option value="Y">年</option>
+								<option value="S">季</option>
+								<option value="M">月</option>
+								<option value="W">周</option>
+								<option value="D">日</option>
+								<option value="H">时</option>
+								<option value="MI">分</option>
+							</select>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">开发者</label>
+						<div class="controls">
+							<select id="selector-owner">
+								<option value="">--选择全部--</option>
+							</select>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">数据源</label>
+						<div class="controls">
+							<select id="selector-database-src">
+								<option value="">--选择全部--</option>
+								<option value="hive">hive</option>
+								<option value="gp57">gp57</option>
+								<option value="gp59">gp59</option>
+								<option value="greenplum">greenplum</option>
+								<option value="mongodb">mongodb</option>
+								<option value="mysql_analysis_result">mysql_analysis_result</option>
+								<option value="mysql_DianPing">mysql_DianPing</option>
+								<option value="mysql_DianPingAC">mysql_DianPingAC</option>
+								<option value="mysql_DianPingAudit">mysql_DianPingAudit</option>
+								<option value="mysql_DianPingBI">mysql_DianPingBI</option>
+								<option value="mysql_DianPingKV">mysql_DianPingKV</option>
+								<option value="mysql_DianPingLog">mysql_DianPingLog</option>
+								<option value="mysql_DianPingMobile">mysql_DianPingMobile</option>
+								<option value="mysql_DianPingPic">mysql_DianPingPic</option>
+								<option value="mysql_DianPingUC">mysql_DianPingUC</option>
+								<option value="mysql_DPAdwords">mysql_DPAdwords</option>
+								<option value="mysql_DPAPIReport">mysql_DPAPIReport</option>
+								<option value="mysql_dpedmlog">mysql_dpedmlog</option>
+								<option value="mysql_edm_mail">mysql_edm_mail</option>
+								<option value="mysql_MySQLDianPingGroup_dbo">mysql_MySQLDianPingGroup_dbo</option>
+								<option value="mysql_TuanGou2010">mysql_TuanGou2010</option>
+								<option value="mysql_TuanGou2010_220">mysql_TuanGou2010_220</option>
+								<option value="mysql_TuanGouMail">mysql_TuanGouMail</option>
+								<option value="mysql_TuanGou_Analytics">mysql_TuanGou_Analytics</option>
+								<option value="sqlserver_zSurvey_NET">sqlserver_zSurvey_NET</option>								
+							</select>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">是否生效</label>
+						<div class="controls">
+							<select id="selector-if-val">
+								<option value="">--选择全部--</option>
+								<option value="0">否</option>
+								<option value="1">是</option>
+								<option value="2">失效</option>
+							</select>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">任务名称</label>
+						<div class="controls">
+							<input type="text" id="selector-task-name" placeholder="模糊查询..." />
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="controls">
+							<button type="submit" id="search-btn" class="btn btn-large btn-primary pull-right">开始查询</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="span9">
+			<div id="result-info"></div>
+			<div id="pager-ele1" class="pager-ele"></div>
+			<table id="result-table" class="table table-striped">
+				<thead>
+					<tr class="whitesmoke">
+						<th>任务组</th>
+						<th>任务ID</th>
+						<th>任务名称</th>
+						<th>执行周期</th>
+						<th>开发者</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody id="result-body"><!-- class="fade in" -->
+				</tbody>
+			</table>
+			<div id="pager-ele2" class="pager-ele"></div>
+		</div>
+	</div>
+</div>
+
+<div id="delete-modal" class="modal hide">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal">&times;</button>
+		<h5>提示框</h5>
+	</div>
+	<div class="modal-body">
+		<p>是否确定删除？</p>
+	</div>
+	<div class="modal-footer">
+		<button id="delete-btn" class="btn btn-primary">确定</button>
+		<button data-dismiss="modal" class="btn">取消</button>
+	</div>
+</div>
+
+<div id="prerun-modal" class="modal hide">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h5>预跑任务</h5>
+        <div class>
+            <h8>时间区间左闭右开.<br>例2013-01-05，开始时间2013-01-05，结束时间2013-01-06</br></h8>
+
+        </div>
+    </div>
+    <div class="modal-body">
+        <div id="back-info" ></div>
+        <div class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label">开始时间</label>
+                <div class="controls">
+                    <input type="text" id="beginDate" placeholder="default:yyyy-mm-dd">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">结束时间</label>
+                <div class="controls">
+                    <input type="text" id="endDate" placeholder="default:yyyy-mm-dd">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button id="prerun-btn" class="btn btn-primary">确定</button>
+        <button data-dismiss="modal" class="btn">取消</button>
+    </div>
+</div>
+
+<div id="task-detail-modal" class="modal hide">
+</div>
+
+<div id="task-search-modal" class="modal hide">
+</div>
+
+<!-- Le javascript -->
+<script type="text/javascript" src="../pluto/resource/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="../pluto/resource/js/halley-global.js"></script>
+<script type="text/javascript" src="../pluto/resource/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../pluto/resource/js/halley-common.js"></script>
+<script type="text/javascript" src="../pluto/resource/js/halley-prototype.js"></script>
+<script type="text/javascript" src="resource/js/task-common.js"></script>
+<script type="text/javascript" src="resource/js/task-view.js"></script>
+</body>
+</html>

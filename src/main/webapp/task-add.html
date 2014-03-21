@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>调度系统</title>
+
+<!-- Le styles -->
+<link rel="Stylesheet" href="../pluto/resource/css/halley-common.css">
+<link rel="Stylesheet" href="../pluto/resource/css/bootstrap.min.css">
+<link rel="Stylesheet" href="../pluto/resource/css/bootstrap-responsive.min.css" />
+<link rel="Stylesheet" href="resource/css/darkbat-common.css">
+
+<!-- Le fav and touch icons -->
+<link rel="Shortcut Icon" href="../pluto/resource/img/icon.png" type="image/x-icon">
+
+<style type="text/css">
+	.selector-form .control-group { padding-top: 9px; margin-bottom: 9px; }
+	.selector-form .control-label { width: 55px; }
+	.selector-form .controls { margin-left: 70px; }
+	.selector-form .form-actions { padding-left: 65px; }
+	.selector-form select { width: 150px; }
+	.selector-form input { width: 140px; }
+	.basic-form .control-group { margin-bottom: 6px; }
+	.basic-form .control-label { width: 100px; }
+	.basic-form .controls { margin-left: 110px; }
+	.basic-form .control-group { margin-bottom: 10px; }
+	.bg-white { background-color: white; }
+	.bg-whitesmoke { background-color: whitesmoke; }
+	.table th,.table td { text-align: center; }
+	.modal-body { max-height: none; }
+	input[type="radio"], input[type="checkbox"] { margin: 0 0; }
+	tfoot .add-row-btn { float: right; margin-right: 10px; }
+	body, input, select, textarea { font-family: 'Courier New'; }
+</style>
+</head>
+<body>
+<div id="navbar-global" class="navbar navbar-fixed-top"></div>
+<div class="container">
+	<div id="bread-crumb"></div>
+
+	<div id="result-info"></div>
+	<div class="accordion" id="accordion">
+		
+		<div class="accordion-group">
+			<div class="accordion-heading bg-whitesmoke">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#dol">
+					1. 导入配置
+				</a>
+			</div>
+			<div id="dol" status="0" class="accordion-body collapse in">
+				<div class="accordion-inner">
+					<div class="row-fluid">
+						<div class="span4">
+							<div class="form-horizontal basic-form">
+							<div class="control-group">
+									<label class="control-label">用户组</label>
+									<div class="controls">
+										<input type="text" class="input" id="group-input" value="" placeholder="请输入您所在的用户组..." >
+										<span id="dol-help" class="help-inline">默认为数据平台组，数据平台组可略过</span>
+									</div>
+									
+								</div>
+								<div class="control-group">
+									<label class="control-label">产品名</label>
+									<div class="controls">
+										<input type="text" class="input" id="product-input" value="" placeholder="请输入产品名..." >
+										<span id="dol-help" class="help-inline">数据平台组可略过</span>
+									</div>
+									
+								</div>
+								<div class="control-group">
+									<label class="control-label">dol名称</label>
+									<div class="controls">
+										<input type="text" class="input" id="dol-input" value="" placeholder="可跳过直接进入基本配置" >
+										<!-- <button type="submit" id="dol-btn" class="btn btn-small btn-primary" data-loading-text="正在导入...">导入</button> -->
+										<a id="dol-btn" class="btn btn-primary" data-loading-text="正在导入...">导入</a>
+										<span id="dol-help" class="help-inline"></span>
+									</div>
+									
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="accordion-group">
+			<div class="accordion-heading bg-whitesmoke">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#basic">
+					2. 基本配置
+				</a>
+			</div>
+			<div><input type="hidden" id="task-id" value="" /></div>
+			<div id="basic" class="accordion-body collapse">
+				<div class="accordion-inner">
+					<div class="row-fluid">
+						<div class="span4">
+							<div class="form-horizontal basic-form">
+								<div class="control-group">
+									<label class="control-label">开发者</label>
+									<div class="controls">
+										<select class="input-big" name="owner">
+										</select>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">数据源</label>
+									<div class="controls">
+										<select class="input-big" name="database-src">
+											<option value="hive">hive</option>
+											<option value="gp57">gp57</option>
+											<option value="gp59">gp59</option>
+										</select>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">结果表名</label>
+									<div class="controls">
+										<input type="text" class="input-big" name="table-name" placeholder="必填项，数据库.表或模式.表" />
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">任务名称</label>
+									<div class="controls">
+										<input type="text" class="input-big" name="task-name" value="hive##" readonly="readonly" />
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">任务组</label>
+									<div class="controls" >
+										<select class="input-big" name="task-group-id">
+											<option value="2">mid/dim</option>
+											<option value="3">dm</option>
+											<option value="4">rpt</option>
+											<option value="5">mail</option>
+											<option value="6">dw</option>
+                                            <option value="7">DQ</option>
+                                            <option value="8">atom</option>
+										</select>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">周期</label>
+									<div class="controls">
+										<select class="input-big" name="cycle">
+											<option value="Y">年</option>
+											<option value="S">季</option>
+											<option value="M">月</option>
+											<option value="W">周</option>
+											<option value="D" selected="selected">日</option>
+											<option value="H">时</option>
+											<option value="MI">分</option>
+										</select>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">超时时间</label>
+										<div class="controls">
+											<select class="input-big" name="timeout">
+												<option value="30">0.5小时</option>
+                                                <option value="60">1小时</option>
+                                                <option value="90" selected="selected">1.5小时</option>
+												<option value="120">2小时</option>
+												<option value="150">2.5小时</option>
+											</select>
+										</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">运行级别</label>
+									<div class="controls">
+										<label class="checkbox inline"> 
+											<input type="radio" value="1" name="prio-lvl" > 高
+										</label>
+										<label class="checkbox inline"> 
+											<input type="radio" value="2" name="prio-lvl"> 中
+										</label>
+										<label class="checkbox inline"> 
+											<input type="radio" value="3" name="prio-lvl" checked="checked"> 低
+										</label>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">是否生效</label>
+									<div class="controls">
+										<label class="checkbox inline"> 
+											<input type="radio" value="0" name="if-val"> 否
+										</label> 
+										<label class="checkbox inline">
+											<input type="radio" value="1" name="if-val" checked="checked"> 是
+										</label>
+										<label class="checkbox inline">
+											<input type="radio" value="2" name="if-val"> 失效
+										</label>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">偏移类型</label>
+									<div class="controls">
+										<select class="input-big" name="offset-type">
+											<option value="offset">offset</option>
+											<!-- <option value="appoint">appoint</option> -->
+										</select>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">偏移量</label>
+									<div class="controls">
+										<select class="input-big" name="offset">
+											<option value="D0">D0</option>
+											<option value="D1">D1</option>
+											<option value="D2">D2</option>
+											<option value="D3">D3</option>
+											<option value="D4">D4</option>
+											<option value="D5">D5</option>
+											<option value="D6">D6</option>
+											<option value="M0">M0</option>
+											<option value="M1">M1</option>
+											<option value="M2">M2</option>
+											<option value="M3">M3</option>
+											<option value="M4">M4</option>
+											<option value="M5">M5</option>
+											<option value="M6">M6</option>
+										</select>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">执行频率</label>
+									<div class="controls">
+										<input type="text" class="input-big" name="freq" value="0 5 0 * * ?" placeholder="必填项" />
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="span4">
+							<div class="form-horizontal basic-form">
+								<div class="control-group">
+									<label class="control-label">出错重新执行</label>
+									<div class="controls">
+										<label class="checkbox inline"> 
+											<input type="radio" value="0" name="if-recall"> 否
+										</label>
+										<label class="checkbox inline"> 
+											<input type="radio" value="1" name="if-recall" checked="checked"> 是
+										</label>
+									</div>
+								</div>
+                                <!--
+								<div class="control-group">
+									<label class="control-label">重新执行code</label>
+									<div class="controls">
+										<input type="text" class="input-big" name="recall-code" value="1" placeholder="必填项，用;分隔" />
+									</div>
+								</div>
+								-->
+								<div class="control-group">
+									<label class="control-label">依赖重新执行</label>
+									<div class="controls">
+										<label class="checkbox inline"> 
+											<input type="radio" value="0" name=if-wait checked="checked"> 否
+										</label>
+										<label class="checkbox inline"> 
+											<input type="radio" value="1" name="if-wait"> 是
+										</label>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">依赖执行code</label>
+									<div class="controls">
+										<input type="text" class="input-big" name="wait-code" disabled="disabled" />
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">成功code</label>
+									<div class="controls">
+										<input type="text" class="input-big" name="success-code" value="0" placeholder="必填项，用;分隔" />
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">重跑次数上限</label>
+									<div class="controls">
+										<select class="input-big" name="recall-limit">
+											<option value="1">1</option>
+											<option value="2">2</option>
+											<option value="3">3</option>
+											<option value="4">4</option>
+											<option value="5" selected="selected">5</option>
+											<option value="6">6</option>
+											<option value="7">7</option>
+											<option value="8">8</option>
+											<option value="9">9</option>
+											<option value="10">10</option>
+										</select>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">重跑间隔</label>
+									<div class="controls">
+										<select class="input-big" name="recall-interval">
+											<option value="1">1分钟</option>
+											<option value="2">2分钟</option>
+											<option value="3">3分钟</option>
+											<option value="4">4分钟</option>
+											<option value="5">5分钟</option>
+											<option value="6">6分钟</option>
+											<option value="7">7分钟</option>
+											<option value="8">8分钟</option>
+											<option value="9">9分钟</option>
+											<option value="10" selected="selected">10分钟</option>
+										</select>
+									</div>
+								</div>
+								<hr />
+								<div class="control-group">
+									<label class="control-label">参数1</label>
+									<div class="controls">
+										<input type="text" class="input-big" name="para1" />
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">参数2</label>
+									<div class="controls">
+										<input type="text" class="input-big" name="para2" />
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">参数3</label>
+									<div class="controls">
+										<input type="text" class="input-big" name="para3" />
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">备注</label>
+									<div class="controls">
+										<textarea class="input-big" rows="4" name="remark"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="span4">
+<pre><strong>注意事项：</strong>
+1. 结果表名
+  格式：数据库.表或模式.表
+  gp：dpods.dp_shop
+  hive：bi.dpods_dp_shop
+2. 任务组
+  1: wormhole   2: mid/dim    3: dm
+  4: rpt        5: mail       6: dw
+3. 超时时间
+  当任务运行超过指定时间后，调度置其状态为timeout
+4. 是否失效
+  否：任务刚完成配置，尚未启用
+  是：任务已启用
+  失效：任务已废弃（等效于删除）
+5. 偏移类型
+  offset：相对偏移量
+  appoint：特定日期偏移量
+6. 偏移量
+  D：天级偏移，M：月级偏移，字母后的数字表示具体的偏移值
+  D0：不偏移，D1：向前偏移一天，M2：向前偏移两月
+7. 执行频率
+  此处应填写quartz表达式，具体写法请咨询@弘頔</pre>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="accordion-group">
+			<div class="accordion-heading bg-whitesmoke">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#advanced">
+					3. 前驱依赖配置
+				</a>
+			</div>
+			<div id="advanced" class="accordion-body collapse">
+				<div class="accordion-inner">
+					<div class="row-fluid">
+						<div class="span8">
+							<table id="advanced-table" class="table table-bordered bg-white">
+								<thead>
+									<tr class="bg-whitesmoke">
+										<th style="width:20%;">任务组</th>
+										<th style="width:50%;">任务名称</th>
+										<th style="width:20%;">前驱任务周期</th>
+										<th style="width:10%;">操作</th>
+									</tr>
+								</thead>
+								<tbody id="advanced-body">
+								</tbody>
+								<tfoot>
+									<tr class="bg-whitesmoke">
+										<td colspan="4" style="width:10%;">
+											<button class="btn add-row-btn" id="add-row-btn"><i class="icon-plus"></i></button>
+										</td>
+									</tr>
+								</tfoot>
+							</table>
+						</div>
+						<div class="span4">
+<pre><strong>注意事项：</strong>
+1. 此处配置当前任务的所有前驱依赖任务
+2. 前驱任务周期为该前驱任务的周期+下拉框选择的数值</pre>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="form-actions">
+		<div class="pull-right">
+			<button type="submit" id="submit-btn" class="btn btn-large btn-primary">确定</button>
+		</div>
+	</div>
+</div>
+
+<div id="task-search-modal" class="modal hide">
+</div>
+
+<!-- Le javascript -->
+<script type="text/javascript" src="../pluto/resource/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="../pluto/resource/js/halley-global.js"></script>
+<script type="text/javascript" src="../pluto/resource/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../pluto/resource/js/halley-common.js"></script>
+<script type="text/javascript" src="../pluto/resource/js/halley-prototype.js"></script>
+<script type="text/javascript" src="resource/js/task-common.js"></script>
+<script type="text/javascript" src="resource/js/task-add.js"></script>
+</body>
+</html>

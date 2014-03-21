@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>调度系统</title>
+<link rel="Stylesheet" href="../pluto/resource/css/halley-common.css">
+<link rel="Stylesheet" href="../pluto/resource/css/bootstrap.min.css">
+<link rel="Stylesheet" href="../pluto/resource/css/bootstrap-responsive.min.css" />
+<link rel="Stylesheet" href="resource/css/darkbat-common.css">
+<link rel="Shortcut Icon" href="../pluto/resource/img/icon.png" type="image/x-icon">
+<style type="text/css">
+	.selector-form .control-group { padding-top: 9px; margin-bottom: 9px; }
+	.selector-form .control-label { width: 55px; }
+	.selector-form .controls { margin-left: 70px; }
+	.selector-form .form-actions { padding-left: 65px; }
+	.selector-form select { width: 150px; }
+	.selector-form input { width: 140px; }
+	.table th,.table td { text-align: center; }
+	.modal-body { max-height: none; }
+	.bg-white { background-color: white; }
+	.bg-whitesmoke { background-color: whitesmoke; }
+	legend { text-align: center; font-weight: bold; font-size: 16px; margin-bottom: 18px; }
+	legend + .control-group { margin-top: 0px; }
+	body, input, select, textarea { font-family: 'Courier New'; }
+	tfoot .add-row-btn { float: right; margin-right: 20px; }
+</style>
+</head>
+<body>
+<div id="navbar-global" class="navbar navbar-fixed-top"></div>
+<div class="container">
+	<div id="bread-crumb"></div>
+	<div class="row">
+		<div class="span3">
+			<div class="well well-large">
+				<form class="form-horizontal selector-form">
+					<div class="control-group">
+						<label class="control-label">数据库名</label>
+						<div class="controls" >
+							<select id="selector-database-name">
+								<option value="bi">bi</option>
+								<option value="algo">algo</option>
+								<option value="arch">arch</option>
+								<option value="ba">ba</option>
+								<option value="ba1">ba1</option>
+								<option value="bi_test">bi_test</option>
+								<option value="dataalgo">dataalgo</option>
+								<option value="default">default</option>
+								<option value="dpdp">dpdp</option>
+								<option value="mobile">mobile</option>
+								<option value="search">search</option>
+								<option value="tmp">tmp</option>
+								<option value="tuangou">tuangou</option>
+								<option value="www">www</option>
+							</select>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">表名</label>
+						<div class="controls">
+							<input type="text" id="selector-table-name" />
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="controls">
+							<button type="submit" id="search-btn" class="btn btn-large btn-primary pull-right">开始查询</button>
+						</div>
+					</div>
+				</form>
+			</div>
+			<hr />
+			<div>
+<pre><strong>注意事项：</strong>
+1. 支持由预发布环境向线上环境建表，加字段和修改字段类型
+2. 加字段默认加在表的最后一列
+3. 表注释和字段注释尽量用中文填全
+4. 线上建表必须用此工具，否则该表无法对外授权和上线刷新任务</pre>
+			</div>
+		</div>
+		<div class="span9">
+			<div id="result-info"></div>
+			<div class="form-horizontal basic-form">
+				<fieldset>
+					<legend>表的详细信息</legend>
+					<div class="row-fluid">
+						<div class="span6">
+							<div class="control-group">
+								<label class="control-label">数据库名</label>
+								<div class="controls">
+									<input type="text" class="input-big" name="database" id="database" readonly="readonly" />
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">路径</label>
+								<div class="controls">
+									<input type="text" class="input-big" name="location" id="location" readonly="readonly" />
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">开发者</label>
+								<div class="controls">
+									<select id="owner">
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="span6">
+							<div class="control-group">
+								<label class="control-label">表的注释</label>
+								<div class="controls">
+									<input type="text" class="input-big" name="table-comment" id="table-comment" />
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">表的类型</label>
+								<div class="controls">
+									<input type="text" class="input-big" name="table-type" id="table-type" readonly="readonly" />
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">存储周期</label>
+								<div class="controls">
+									<select id="storage-cycle">
+										<option value="18">Greater Than 18 Months</option>
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+                <fieldset>
+                    <legend>授权信息</legend>
+                    <div class="row-fluid">
+                        <div class="span6">
+                            <label class="control-label">线上组帐号</label>
+                            <div class="controls">
+                                <select id="online_group">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="span6">
+                            <label class="control-label">线下组帐号</label>
+                            <div class="controls">
+                                <select id="offline_group">
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+				</fieldset>
+				<div class="row-fluid">
+					<div class="span6">
+						<fieldset>
+							<legend>存储信息</legend>
+							<div class="control-group">
+								<label class="control-label">SerDe库</label>
+								<div class="controls">
+									<input type="text" class="input-big" name="serde-library" id="serde-library" readonly="readonly" />
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">输入格式</label>
+								<div class="controls">
+									<input type="text" class="input-big" name="input-format" id="input-format" readonly="readonly" />
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">输出格式</label>
+								<div class="controls">
+									<input type="text" class="input-big" name="output-format" id="output-format" readonly="readonly" />
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">分桶数量</label>
+								<div class="controls">
+									<input type="text" class="input-big" name="num-buckets" id="num-buckets" readonly="readonly" />
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">分桶列名</label>
+								<div class="controls">
+									<input type="text" class="input-big" name="bucket-columns" id="bucket-columns" readonly="readonly" />
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">排序列名</label>
+								<div class="controls">
+									<input type="text" class="input-big" name="sort-columns" id="sort-columns" readonly="readonly" />
+								</div>
+							</div>
+						</fieldset>
+					</div>
+					<div class="span6">
+						<fieldset>
+							<legend>存储描述参数</legend>
+							<div class="control-group">
+								<label class="control-label">集合分隔符</label>
+								<div class="controls">
+									<input type="text" class="input-big" name="collection-delim" id="collection-delim" readonly="readonly" />
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">列分隔符</label>
+								<div class="controls">
+									<input type="text" class="input-big" name="field-delim" id="field-delim" readonly="readonly" />
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">行分隔符</label>
+								<div class="controls">
+									<input type="text" class="input-big" name="line-delim" id="line-delim" readonly="readonly" />
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">散列键值分隔符</label>
+								<div class="controls">
+									<input type="text" class="input-big" name="mapkey-delim" id="mapkey-delim" readonly="readonly" />
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label">序列化格式</label>
+								<div class="controls">
+									<input type="text" class="input-big" name="serialization-format" id="serialization-format" readonly="readonly" />
+								</div>
+							</div>
+						</fieldset>
+					</div>
+				</div>
+				<fieldset>
+					<legend>列的信息</legend>
+					<table id="column-table" class="table table-striped">
+						<thead>
+							<tr class="whitesmoke">
+								<th>序号</th>
+								<th>列名</th>
+								<th>类型</th>
+								<th>注释</th>
+							</tr>
+						</thead>
+						<tbody id="column-table-body" style="display: table-row-group;">
+						</tbody>
+					</table>
+				</fieldset>
+				<fieldset>
+					<legend>分区列的信息</legend>
+					<table id="partition-column-table" class="table table-striped">
+						<thead>
+							<tr class="whitesmoke">
+								<th>序号</th>
+								<th>列名</th>
+								<th>类型</th>
+								<th>注释</th>
+							</tr>
+						</thead>
+						<tbody id="partition-column-table-body" style="display: table-row-group;">
+						</tbody>
+					</table>
+				</fieldset>
+			</div>
+		</div>
+	</div>
+	<div class="form-actions">
+		<div class="pull-right">
+			<button type="submit" id="submit-btn" class="btn btn-large btn-primary">确定</button>
+		</div>
+	</div>
+</div>
+
+<div id="sql-modal" class="modal hide">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal">&times;</button>
+		<h5>SQL预览</h5>
+	</div>
+	<div class="modal-body">
+		<pre id="sql-preview"></pre>
+	</div>
+	<div class="modal-footer">
+		<button id="confirm-btn" class="btn btn-primary">确定</button>
+		<button data-dismiss="modal" class="btn">取消</button>
+	</div>
+</div>
+
+<script type="text/javascript" src="../pluto/resource/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="../pluto/resource/js/halley-global.js"></script>
+<script type="text/javascript" src="../pluto/resource/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../pluto/resource/js/halley-common.js"></script>
+<script type="text/javascript" src="../pluto/resource/js/halley-prototype.js"></script>
+<script type="text/javascript" src="resource/js/task-common.js"></script>
+<script type="text/javascript" src="resource/js/hive-tool.js"></script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>调度系统</title>
+
+<!-- Le styles -->
+<link rel="Stylesheet" href="../pluto/resource/css/halley-common.css">
+<link rel="Stylesheet" href="../pluto/resource/css/bootstrap.min.css">
+<link rel="Stylesheet" href="../pluto/resource/css/bootstrap-responsive.min.css" />
+<link rel="Stylesheet" href="resource/css/darkbat-common.css">
+
+<!-- Le fav and touch icons -->
+<link rel="Shortcut Icon" href="../pluto/resource/img/icon.png" type="image/x-icon">
+<style type="text/css">
+	.target-form .control-label { width: 100px; } 			
+	.target-form .controls { margin-left: 110px; }
+	.target-form .control-group { margin-bottom: 10px; }
+	.bg-white { background-color: white; }
+	.bg-whitesmoke { background-color: whitesmoke; }
+	.table th,.table td { text-align: center; }
+	.scroll-table { height: 500px; overflow: auto; }
+	.help-info { margin: 15px; }
+	input[type="radio"], input[type="checkbox"] { margin: 0 0; }
+	tfoot .add-row-btn { float: right; margin-right: 10px; }
+	body, input, select, textarea { font-family: 'Courier New'; }
+</style>
+</head>
+<body>
+<div id="navbar-global" class="navbar navbar-fixed-top"></div>
+<div class="container">
+	<div id="bread-crumb"></div>
+	<div id="result-info"></div>
+	<form>
+		<div class="row-fluid">
+			<div class="span4">
+				<div id="target-form" class="form-horizontal target-form">
+					<div class="control-group">
+						<label class="control-label">是否上调度</label>
+						<div class="controls">
+							<select class="input-big" id="target-is-active-schedule">
+								<option value="">--请选择--</option>
+								<option value="1">是</option>
+								<!--<option value="0">否</option>-->
+							</select>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">类型</label>
+						<div class="controls">
+							<select class="input-big" id="target-datasource-type">
+							</select>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">表名</label>
+						<div class="controls">
+							<input type="text" id="target-schema-table" readonly="readonly" />
+						</div>
+					</div>
+                    <!--
+                    <div class="control-group">
+                        <label class="control-label">是否双写</label>
+                        <div class="controls">
+                            <select class="input-big" id="target-write-type">
+                            </select>
+                        </div>
+                    </div>
+                    -->
+					<div class="control-group">
+						<label class="control-label">表类型</label>
+						<div class="controls">
+							<select class="input-big" id="target-table-type">
+							</select>
+						</div>
+					</div>
+					<div class="control-group"><!-- 日志表 -->
+						<label class="control-label">分区字段</label>
+						<div class="controls">
+							<select class="input-big" id="target-segment-column">
+							</select>
+						</div>
+					</div>
+				</div>
+				<hr />
+				<div class="help-info">
+<pre><strong>注意事项：</strong>
+1. auto-etl只支持向数据平台中的gp(57/59)和hive服务器上写数据，不支持向其他数据源写数据
+2. 表名的规则是根据“是否上调度”、“类型”、“表类型”选项和“源表名”生成的，不支持自定义目标表名
+3. 表类型解释详见：<a href="https://docs.google.com/a/dianping.com/spreadsheet/ccc?key=0Ag1uc4M1gcdSdFFjd0ZXQUxxdUp3YXFPelpoQ3Fpb3c#gid=1">入库方式解释</a>
+4. auto-etl目前暂不支持依赖任务的自动配置，需要到 <a href="http://data.dp/halley/task-view.html">任务配置</a> 中修改该任务的依赖关系</pre>
+				</div>
+			</div>
+			<div class="span8 scroll-table">
+				<table id="column-table" class="table table-bordered bg-white">
+					<thead>
+						<tr class="bg-whitesmoke">
+							<th style="width:25%;">名称</th>
+							<th style="width:20%;">类型</th>
+							<th style="width:10%;">键</th>
+							<th style="width:45%;">备注</th>
+						</tr>
+					</thead>
+					<tbody id="column-body">
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="form-actions">
+			<div class="pull-right">
+				<button type="submit" id="submit-btn" class="btn btn-large btn-primary">确定</button>
+				<button type="button" id="cancel-btn" class="btn btn-large">取消</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+<div id="sql-modal" class="modal hide">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal">&times;</button>
+		<h5>SQL预览</h5>
+	</div>
+	<div class="modal-body">
+		<pre id="sql-preview"></pre>
+	</div>
+	<div class="modal-footer">
+		<button id="confirm-btn" class="btn btn-primary">确定</button>
+		<button data-dismiss="modal" class="btn">取消</button>
+	</div>
+</div>
+
+<script type="text/javascript" src="../pluto/resource/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="resource/js/purl.js"></script>
+<script type="text/javascript" src="../pluto/resource/js/halley-global.js"></script>
+<script type="text/javascript" src="../pluto/resource/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../pluto/resource/js/halley-common.js"></script>
+<script type="text/javascript" src="../pluto/resource/js/halley-prototype.js"></script>
+<script type="text/javascript" src="resource/js/task-common.js"></script>
+<script type="text/javascript" src="resource/js/autoetl-add.js"></script>
+</body>
+</html>

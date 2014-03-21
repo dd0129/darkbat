@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>SLA 任务状态列表</title>
+    <link rel="stylesheet" href="http://data.dp/pluto/resource/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css">
+    <script type="text/javascript" src="http://data.dp/pluto/resource/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="http://data.dp/pluto/resource/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="resource/js/module/slaList.js"></script>
+    <script type="text/javascript" src="http://data.dp/pluto/resource/js/bootstrap-datepicker.js"></script>
+    <link rel="Stylesheet" href="http://data.dp/pluto/resource/css/datepicker.css">
+    <style type="text/css">
+        .mainClass {min-width: 1260px; padding: 20px; border: 1px solid #eeeeee}
+        #status-bar{padding-bottom: 30px; height: 50px}
+        #refresh-button{float: left}
+        #sla_static{width: 1100px; float: left; font-size:18px; font-weight: bold; padding-left:20px;}
+        #result-body{font-size: 13px}
+        #fail-cotent{display:none;border:grey double; border-width:2px;
+            padding:15px 0px 0px 15px; margin-bottom: 50px; width:1100px;}
+        .popover-inner{background-color:#fff; border:1px solid rgba(0,0,0,0,2)}
+    </style>
+<body>
+    <div id = hiddendivs style="display:none"></div>
+    <div id="maindiv" class = "mainClass">
+        <div class="page-header" style = "height:60px">
+            <div style = "float:left">
+                <h1 id="title" style="width: 600px">SLA任务实时状态列表</h1>
+            </div>
+            <div style = "width: 600px; float:left;line-height: 59px" >
+                <input type = "text" id="run-date" class="datepicker" style = "width:150px; margin-bottom:0px">
+                <a id="his-view" style = "width:70px" type= "button" class="btn btn-primary btn-lg">选择日期</a>
+            </div>
+        </div>
+        <div id = status-bar>
+            <a id = "refresh-button" type="button" class="btn btn-primary btn-lg">刷新</a>
+            <div id = "sla_static"></div>
+        </div>
+        <div id = "fail-cotent">
+            <a id="close-button" type="button" class="btn">关闭</a>
+            <h4>异常任务列表</h4>
+            <table id = "abnormal-table" class = "table table-hover">
+            <thead>
+                <tr class="table-head">
+                    <th>任务Id</th>
+                    <th>任务名称</th>
+                    <th>owner</th>
+                    <th>任务占据瓶颈时间</th>
+                    <th>影响SLA任务数</th>
+                    <th>影响SLA任务总故障分</th>
+                </tr>
+             </thead>
+            <tbody id = "abnormal-body">
+
+            </tbody>
+            </table>
+                <h4>未发生明显异常但占据瓶颈时间较长任务列表</h4>
+                <table id = "normal-table" class = "table table-hover">
+                    <thead>
+                    <tr class="table-head">
+                        <th>任务Id</th>
+                        <th>任务名称</th>
+                        <th>owner</th>
+                        <th>任务占据瓶颈时间</th>
+                        <th>影响SLA任务数</th>
+                        <th>影响SLA任务总故障分</th>
+                    </tr>
+                    </thead>
+                    <tbody id = "normal-body">
+
+                    </tbody>
+                </table>
+
+        </div>
+        <div class="square-border">
+            <table id = "result-table" class="table">
+                <thead>
+                    <tr class="table-head">
+                        <th>SLA ID</th>
+                        <th>SLA类型</th>
+                        <th>SLA名称</th>
+                        <th>(预计)完成时间</th>
+                        <th>当前状态</th>
+                        <th>当前瓶颈任务</th>
+                        <th>瓶颈任务状态</th>
+                        <th>承诺完成时间</th>
+                        <th>任务价值</th>
+                    </tr>
+                </thead>
+                <tbody id = "result-body">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

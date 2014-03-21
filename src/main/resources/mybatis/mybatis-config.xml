@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <typeAliases>
+        <typeAlias alias="DateTime" type="org.joda.time.DateTime" />
+        <typeAlias alias="MailDetailEntity" type="com.dianping.darkbat.entity.MailDetailEntity" />
+        <typeAlias alias="MailInfoEntity" type="com.dianping.darkbat.entity.MailInfoEntity" />
+        <typeAlias alias="TableEntity" type="com.dianping.darkbat.entity.TableEntity" />
+        <typeAlias alias="ColumnEntity" type="com.dianping.darkbat.entity.ColumnEntity" />
+        <typeAlias alias="TaskEntity" type="com.dianping.darkbat.entity.TaskEntity" />
+        <typeAlias alias="TaskRelaEntity" type="com.dianping.darkbat.entity.TaskRelaEntity" />
+        <typeAlias alias="TaskRelaStatusEntity" type="com.dianping.darkbat.entity.TaskRelaStatusEntity" />
+        <typeAlias alias="TaskStatusEntity" type="com.dianping.darkbat.entity.TaskStatusEntity" />
+        <typeAlias alias="TableInfo" type="com.dianping.darkbat.entity.TableInfo" />
+        <typeAlias alias="TaskChildToParentEntity" type="com.dianping.darkbat.entity.TaskChildToParentEntity" />
+        <typeAlias alias="MonitorUser" type="com.dianping.darkbat.entity.MonitorUser" />
+        <typeAlias alias="SlaJobEntity" type="com.dianping.darkbat.entity.SlaJobEntity" />
+        <typeAlias alias="SlaEntity" type="com.dianping.darkbat.entity.SlaEntity" />
+        <typeAlias alias="SlaFailRecordEntity" type="com.dianping.darkbat.entity.SlaFailRecordEntity" />
+        <typeAlias alias="BottleneckTaskEntity" type="com.dianping.darkbat.entity.BottleneckTaskEntity" />
+
+
+    </typeAliases>
+
+    <typeHandlers>
+        <typeHandler javaType="DateTime" jdbcType="TIMESTAMP" handler="com.dianping.darkbat.service.SqlTimestampTypeHandler" />
+    </typeHandlers>
+
+    <mappers>
+        <mapper resource="mybatis/mapper/MailInfoMapper.xml" />
+        <mapper resource="mybatis/mapper/TaskMapper.xml" />
+        <mapper resource="mybatis/mapper/TaskRelaMapper.xml" />
+        <mapper resource="mybatis/mapper/TaskRelaStatusMapper.xml" />
+        <mapper resource="mybatis/mapper/TaskStatusMapper.xml" />
+        <mapper resource="mybatis/mapper/MySQLMapper.xml" />
+
+        <mapper resource="mybatis/mapper/GPMapper.xml" />
+        <mapper resource="mybatis/mapper/REPORTMapper.xml" />
+
+        <mapper resource="mybatis/mapper/HiveMapper.xml" />
+        <mapper resource="mybatis/mapper/TabbuildMapper.xml" />
+        
+        <mapper resource="mybatis/mapper/MonitorUserMapper.xml" />
+        <mapper resource="mybatis/mapper/SlaMapper.xml" />
+
+    </mappers>
+</configuration>

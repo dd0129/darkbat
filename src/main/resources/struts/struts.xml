@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+    <constant name="struts.devMode" value="false" />
+    <constant name="struts.objectFactory" value="spring" />
+    <constant name="struts.objectFactory.spring.autoWire.alwaysRespect" value="true" />
+    <constant name="struts.i18n.encoding" value="UTF-8" />
+
+    <package name="basicstruts2" extends="struts-default" namespace="/" />
+
+    <package name="ajax" extends="json-default" namespace="/json">
+        <interceptors>
+            <interceptor name="ExceptionInterceptor" class="com.dianping.darkbat.interceptor.ExceptionInterceptor"></interceptor>
+            <interceptor-stack name="DarkbatInterceptorStack">
+                <interceptor-ref name="defaultStack"></interceptor-ref>
+                <interceptor-ref name="ExceptionInterceptor"></interceptor-ref>
+            </interceptor-stack>
+        </interceptors>
+        <default-interceptor-ref name="DarkbatInterceptorStack"></default-interceptor-ref>
+
+        <global-results>
+            <result name="exception" type="json">
+                <param name="root">exception.jsonObject</param>
+            </result>
+        </global-results>
+        <global-exception-mappings>
+            <exception-mapping result="exception" exception="com.dianping.darkbat.exception.BaseException"></exception-mapping>
+        </global-exception-mappings>
+
+        <!-- TaskAction -->
+        <action name="reloadMonitorUser" class="com.dianping.darkbat.action.TaskAction" method="reloadMonitorUser">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="getCurrentMonitorUser" class="com.dianping.darkbat.action.TaskAction" method="getCurrentMonitorUser">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        
+        <action name="addOrModifyTaskAction" class="com.dianping.darkbat.action.TaskAction" method="addOrModifyTask">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="checkTaskNameAction" class="com.dianping.darkbat.action.TaskAction" method="checkTaskName">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="getTaskPairAction" class="com.dianping.darkbat.action.TaskAction" method="getTaskPair">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="searchTaskAction" class="com.dianping.darkbat.action.TaskAction" method="searchTask">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="getAllTaskBasicInfoAction" class="com.dianping.darkbat.action.TaskAction" method="getAllTaskBasicInfo">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="getTaskDetailAction" class="com.dianping.darkbat.action.TaskAction" method="getTaskDetail">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="getTaskStatusAction" class="com.dianping.darkbat.action.TaskAction" method="getTaskStatus">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="searchTaskRelaStatusAction" class="com.dianping.darkbat.action.TaskAction" method="searchTaskRelaStatus">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="getAllRunningTaskIdsAction" class="com.dianping.darkbat.action.TaskForMasterdataAction" method="getAllRunningTaskIds">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="getSuspendTaskIdsAction" class="com.dianping.darkbat.action.TaskForMasterdataAction" method="getSuspendTaskIds">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="deleteTaskAction" class="com.dianping.darkbat.action.TaskAction" method="deleteTask">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="setLoginUserToken" class="com.dianping.darkbat.action.TaskAction" method="setLoginUserToken">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="getTaskLogContentAction" class="com.dianping.darkbat.action.TaskAction" method="getTaskLogContent">
+            <result type="json">
+                <param name="enableGZIP">true</param>
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+
+        <!-- TopologyAction -->
+        <action name="getSimplePostAndPreAction" class="com.dianping.darkbat.action.TopologyAction" method="getSimplePostAndPre">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="rerunMultiJobs" class="com.dianping.darkbat.action.TopologyAction" method="rerunMultiJobs">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="getAllPreAndPostAction" class="com.dianping.darkbat.action.TopologyAction" method="getAllPreAndPost">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+
+        <action name="getTimecostLongPath" class="com.dianping.darkbat.action.TopologyAction" method="getTimecostLongPath">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+
+        <action name="getAllChildren" class="com.dianping.darkbat.action.TopologyAction" method="getAllChildren">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="rerunTaskAction" class="com.dianping.darkbat.action.TopologyAction" method="rerunTask">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="raisePriorityAction" class="com.dianping.darkbat.action.TopologyAction" method="raisePriority">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="modifyTaskAction" class="com.dianping.darkbat.action.TopologyAction" method="modifyTaskStatus">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+
+        <!-- AutoETLAction -->
+        <action name="searchTableAction" class="com.dianping.darkbat.action.AutoETLAction" method="searchTable">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="getAllColumnAction" class="com.dianping.darkbat.action.AutoETLAction" method="getAllColumn">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="getAllDatabaseAction" class="com.dianping.darkbat.action.AutoETLAction" method="getAllDatabase">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="generateDDLAction" class="com.dianping.darkbat.action.AutoETLAction" method="generateDDL">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="checkDBRule" class="com.dianping.darkbat.action.AutoETLAction" method="checkDBRule">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="createTableAction" class="com.dianping.darkbat.action.AutoETLAction" method="createTable">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="generateTabInfoAction" class="com.dianping.darkbat.action.AutoBuildTabAction" method="generateTabInfo">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="generateAutoBuildTabDDLAction" class="com.dianping.darkbat.action.AutoBuildTabAction" method="generateAutoBuildTabDDL">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="createTableAutoBuildTabAction" class="com.dianping.darkbat.action.AutoBuildTabAction" method="createTableAutoBuildTab">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+	    <action name="getACLGroupAction" class="com.dianping.darkbat.action.AutoBuildTabAction" method="getGroupList" >
+		    <result type="json">
+			    <param name="root">jsonObject</param>
+		    </result>
+	    </action>
+        <action name="test" class="com.dianping.darkbat.action.AutoBuildTabAction" method="test">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="test1" class="com.dianping.darkbat.action.AutoBuildTabAction" method="test1">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+
+        <action name="updateTaskPrioLvlForMasterdata" class="com.dianping.darkbat.action.TaskForMasterdataAction" method="updateTaskPrioLvlForMasterdata">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+
+        <action name="getPrerunTaskStatusEntityByTaskId" class="com.dianping.darkbat.action.TaskForMasterdataAction" method="getPrerunTaskStatusEntityByTaskId">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+
+        <action name="getDolInfo" class="com.dianping.darkbat.action.AutoConfigAction" method="getDolInfo">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+
+        <!-- 邮件模块 -->
+        <action name="getMailList" class="com.dianping.darkbat.action.MailInfoAction" method="getMailList">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="getMailListContainsReport" class="com.dianping.darkbat.action.MailInfoAction" method="getMailListContainsReport">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="addOrUpdateMailInfo" class="com.dianping.darkbat.action.MailInfoAction" method="addOrUpdateMailInfo">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="getExistMailInfo" class="com.dianping.darkbat.action.MailInfoAction" method="getExistMailInfo">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        
+		<action name="deleteMailInfo" class="com.dianping.darkbat.action.MailInfoAction" method="deleteMailInfo">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        
+        <action name="resendMail" class="com.dianping.darkbat.action.MailInfoAction" method="resendMail">
+        	<result type="json">
+        		<param name="root">jsonObject</param>
+        	</result>
+        </action>
+        
+        <action name="getMailItems" class="com.dianping.darkbat.action.MailInfoAction" method="getMailItems">
+        	<result type="json">
+        		<param name="root">jsonObject</param>
+        	</result>
+        </action>
+
+        <!-- 报表平台 -->
+        <action name="getReportListWithPreTaskId" class="com.dianping.darkbat.action.MailInfoAction" method="getReportListWithPreTaskId">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="getPageListWithPreTaskId" class="com.dianping.darkbat.action.MailInfoAction" method="getPageListWithPreTaskId">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="getReportListFromVenus" class="com.dianping.darkbat.action.MailInfoAction" method="getReportListFromVenus">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="getReportListFromVenusByIds" class="com.dianping.darkbat.action.MailInfoAction" method="getReportListFromVenusByIds">
+        	<result type="json">
+        		<param name="root">jsonObject</param>
+        	</result>
+        </action>
+        <action name="getPageListFromVenus" class="com.dianping.darkbat.action.MailInfoAction" method="getPageListFromVenus">
+        	<result type="json">
+        		<param name="root">jsonObject</param>
+        	</result>
+        </action>
+        <action name="getPageItemListFromVenusByIds" class="com.dianping.darkbat.action.MailInfoAction" method="getPageItemListFromVenusByIds">
+        	<result type="json">
+        		<param name="root">jsonObject</param>
+        	</result>
+        </action>
+        
+        <!-- halley action -->
+        <action name="prerunJob" class="com.dianping.darkbat.action.HalleyAction" method="prerunJob">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+
+        <action name="temprunJob" class="com.dianping.darkbat.action.HalleyAction" method="temporaryRunJob">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+
+        <action name="batchstopPrerunTasks" class="com.dianping.darkbat.action.HalleyAction" method="batchstopPrerunJob">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+
+        <action name="prerunChildCascadeJob" class="com.dianping.darkbat.action.HalleyAction" method="prerunChildCascadeJob">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        
+        <action name="updateMailPreTasks" class="com.dianping.darkbat.action.MailInfoAction" method="updateMailPreTasks">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        
+        <action name="sendTestMail" class="com.dianping.darkbat.action.MailInfoAction" method="sendTestMail">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        
+        <action name="handleBDCacheJob" class="com.dianping.darkbat.action.MailInfoAction" method="handleBDCacheJob">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        
+        <action name="getPageDataCycles" class="com.dianping.darkbat.action.MailInfoAction" method="getPageDataCycles">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+
+        <action name="getSlaJobFinishTime" class="com.dianping.darkbat.action.SlaAction" method="getSlaJobFinishTime">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="getSlaJobs" class="com.dianping.darkbat.action.SlaAction" method="getSlaJobs">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="buildSlaLists" class="com.dianping.darkbat.action.SlaAction" method="buildSlaLists">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="getBottleNecks" class="com.dianping.darkbat.action.SlaAction" method="getBottleNecks">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+        <action name="getTaskStatusDetail" class="com.dianping.darkbat.action.SlaAction" method="getTaskStatusDetail">
+            <result type="json">
+                <param name="root">jsonObject</param>
+            </result>
+        </action>
+    </package>
+</struts>

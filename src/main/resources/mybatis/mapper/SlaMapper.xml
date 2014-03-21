@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dianping.darkbat.mapper.SlaMapper">
+    <sql id="table">mn_sla_report_list</sql>
+
+    <resultMap id="SlaJobEntityMap" type="SlaJobEntity">
+        <id property="slaId" column="sla_id" />
+        <result property="slaType" column="sla_type" />
+        <result property="jobValue" column="job_value" />
+        <result property="slaName" column="sla_name" />
+        <result property="finishTime" column="predict_time" />
+        <result property="keyTaskId" column="key_task_id" />
+        <result property="keyPreTaskId" column="task_id" />
+        <result property="keyPreTaskName" column="task_name" />
+        <result property="keyPreStatus" column="task_status" />
+        <result property="warnBeginTime" column="warn_begin_time" />
+        <result property="warnTime" column="warn_time" />
+        <result property="reportStatus" column="report_status" />
+    </resultMap>
+
+    <resultMap id="SlaEntityMap" type="SlaEntity">
+        <id property="slaId" column="sla_id" />
+        <result property="slaType" column="sla_type"/>
+        <result property="slaStatus" column="sla_status" />
+        <result property="jobId" column="job_id" />
+        <result property="slaName" column="sla_name" />
+        <result property="warnBeginTime" column="warn_begin_time" />
+        <result property="warnTime" column="warn_time" />
+        <result property="warnType" column="warn_type" />
+    </resultMap>
+
+    <resultMap id="SlaFailRecordEntityMap" type="SlaFailRecordEntity">
+        <result property="slaId" column="sla_id" />
+        <result property="slaName" column="sla_name"/>
+        <result property="keyTaskId" column="key_task_id"/>
+        <result property="keyTaskStatus" column="key_task_status" />
+        <result property="taskName" column="task_name" />
+        <result property="owner" column="owner" />
+        <result property="delaySec" column="delay_sec" />
+        <result property="jobValue" column="job_value" />
+    </resultMap>
+
+    <resultMap id="bottleneckTaskMap" type="BottleneckTaskEntity">
+        <result property="keyTaskId" column="key_task_id"/>
+        <result property="taskName" column="task_name" />
+        <result property="owner" column="owner" />
+        <result property="delaySec" column="delay_sec" />
+        <result property="jobValue" column="job_value" />
+        <result property="delayCnt" column="delay_cnt" />
+        <result property="abnormal" column="abnormal" />
+    </resultMap>
+
+
+
+    <select id="getSlaJobs" parameterType="Map" resultMap="SlaJobEntityMap">
+        SELECT a.sla_id, b.sla_type, b.job_value,a.sla_name,a.predict_time,a.key_task_id,a.task_id,a.task_name,a.task_status,a.warn_begin_time
+        ,a.warn_time,a.report_status
+        FROM mn_sla_report_list a join mn_sla_list b on a.sla_id = b.sla_id
+        where a.time_id = #{timeId}
+    </select>
+
+    <select id="getUserEmail" parameterType="String" resultType="String">
+        SELECT employee_email
+        FROM  acl_authuser_info
+        <where>
+            employee_name = #{userName}
+
+        </where>
+    </select>
+    <select id="getSlaJobById" parameterType="Map" resultMap="SlaJobEntityMap">
+        SELECT *
+        FROM <include refid="table" />
+        <where>
+            sla_id = #{slaId}
+            and time_id = #{timeId}
+        </where>
+    </select>
+
+
+    <insert id="insertSlaDim" parameterType="SlaEntity"
+            useGeneratedKeys="true" keyProperty="sla.slaId">
+            INSERT INTO mn_sla_list
+            (sla_type, sla_status, job_id, sla_name, warn_begin_time, warn_time, warn_type)
+            VALUES
+            (#{sla.slaType}, #{sla.slaStatus}, #{sla.jobId}, #{sla.slaName}, #{sla.warnBeginTime}, #{sla.warnTime}, #{sla.warnType})
+    </insert>
+
+    <insert id="insertSlaJob" parameterType="Map">
+            INSERT INTO mn_sla_joblist
+            (sla_id, task_id)
+            VALUES
+            (#{sla.slaId}, #{preTaskId})
+    </insert>
+
+    <insert id="insertSlaUser" parameterType="SlaEntity">
+            INSERT INTO mn_sla_user_info
+            (sla_id, user_name, user_email)
+            VALUES
+            (#{sla.slaId}, #{sla.userName},#{sla.userEmail})
+    </insert>
+
+    <select id="getSlas" resultMap="SlaEntityMap">
+        SELECT a.sla_id, a.sla_type,a.sla_status,a.job_id, a.sla_name, a.warn_begin_time, a.warn_time, a.warn_type
+        FROM mn_sla_list a
+        <where>
+            sla_type in (1,2,3)
+        </where>
+    </select>
+
+    <update id = 'updateSlaDim' parameterType="SlaEntity">
+        UPDATE mn_sla_list
+        <set>
+            sla_name = #{sla.slaName}
+            ,sla_status = #{sla.slaStatus}
+        </set>
+        <where>
+            sla_id = #{sla.slaId}
+        </where>
+    </update>
+
+    <update id = 'updateSlaJob' parameterType="Map">
+        UPDATE mn_sla_joblist
+        <set>
+            task_id = #{preTaskId}
+        </set>
+        <where>
+            sla_id = #{sla.slaId}
+        </where>
+    </update>
+
+    <delete id="deleteSlaJob" parameterType="Map">
+        delete from mn_sla_joblist
+        <where>
+            sla_id = #{sla.slaId}
+        </where>
+    </delete>
+
+    <select id="getdelayinfo" parameterType="Map" resultMap="bottleneckTaskMap">
+            select b.key_task_id,d.task_name,d.owner,avg(b.delay_sec) as delay_sec,count(distinct a.sla_id) delay_cnt,sum(c.job_value) job_value,min(case when e.key_task_id is null then 0 else 1 end) abnormal
+            from
+            (select sla_id from mn_sla_report_list where report_status in(-1,2) and time_id = #{timeId})a
+            join
+             (select
+            sla_id
+            , key_task_id
+            ,(count(record_time)*120) as delay_sec from mn_sla_warn_history where
+            time_id = #{timeId}
+            group by sla_id, key_task_id) b
+            on a.sla_id = b.sla_id
+            join
+            mn_sla_list c
+            on a.sla_id = c.sla_id
+            join
+            etl_task_cfg d
+            on b.key_task_id = d.task_id
+            left outer JOIN
+            (select distinct key_task_id from mn_sla_warn_history where
+            time_id = #{timeId} and key_task_status in(-1,3,4,7) ) e
+            on b.key_task_id = e.key_task_id
+            group by b.key_task_id
+            having abnormal = 1 or delay_sec > 3600
+            order by abnormal, job_value desc
+    </select>
+    <select id="getJobRunHis" parameterType="Map" resultType="Map">
+     select key_task_id, key_task_status,avg(block_time) as block_time from
+      (select key_task_id, sla_id,key_task_status,count(record_time)*120 as block_time
+      from mn_sla_warn_history
+      where time_id = #{timeId} and key_task_id in
+      <foreach item="keyTaskId" index="index" collection="keyTaskId"
+                 open="(" separator="," close=")">
+      #{keyTaskId}
+       </foreach>
+      group by key_task_id, sla_id,key_task_status)tmp
+      group by key_task_id, key_task_status
+    </select>
+</mapper>

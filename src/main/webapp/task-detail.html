@@ -1,0 +1,413 @@
+<div class="modal-header">
+	<a class="close" data-dismiss="modal">&times;</a>
+	<h4>任务详情</h4>
+</div>
+<div class="modal-body">
+	<div id="modal-result-info"></div>
+	<div class="accordion HIDDEN" id="accordion">
+		<div class="accordion-group">
+			<div class="accordion-heading bg-whitesmoke">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#dol">
+					1. 导入配置
+				</a>
+			</div>
+			<div id="dol" status="1" class="accordion-body collapse">
+				<div class="accordion-inner">
+					<div class="row-fluid">
+						<div class="span4">
+							<div class="form-horizontal basic-form">
+							<div class="control-group">
+									<label class="control-label">用户组</label>
+									<div class="controls">
+										<input type="text" class="input" id="group-input" value="" placeholder="请输入您所在的用户组..." >
+										<span id="dol-help" class="help-inline">数据平台组可略过</span>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">产品名</label>
+									<div class="controls">
+										<input type="text" class="input" id="product-input" value="" placeholder="请输入产品名..." >
+										<span id="dol-help" class="help-inline">数据平台组可略过</span>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">dol名称</label>
+									<div class="controls">
+										<input type="text" class="input" id="dol-input" value="" placeholder="可跳过直接进入基本配置" >
+										<!-- <button type="submit" id="dol-btn" class="btn btn-small btn-primary" data-loading-text="正在导入...">导入</button> -->
+										<a id="dol-btn" class="btn btn-primary" data-loading-text="正在导入...">导入</a>
+										<span id="dol-help" class="help-inline"></span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="accordion-group">
+			<div class="accordion-heading bg-whitesmoke">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#basic">
+					2. 基本配置
+				</a>
+			</div>
+			<div><input type="hidden" id="task-id" value="" /></div>
+			<div id="basic" class="accordion-body collapse in">
+				<div class="accordion-inner">
+					<div class="row-fluid">
+						<div class="span6">
+							<div class="form-horizontal basic-form">
+								<div class="control-group">
+									<label class="control-label">开发者</label>
+									<div class="controls">
+										<select class="input-big" name="owner">
+										</select>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">数据源</label>
+									<div class="controls">
+										<select class="input-big" name="database-src">
+											<option value="hive">hive</option>
+											<option value="gp57">gp57</option>
+											<option value="gp59">gp59</option>
+										</select>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">结果表名</label>
+									<div class="controls">
+										<input type="text" class="input-big" name="table-name" />
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">任务名称</label>
+									<div class="controls">
+										<input type="text" class="input-big" name="task-name" readonly="readonly" />
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">任务组</label>
+									<div class="controls" >
+										<select class="input-big" name="task-group-id">
+											<option value="1">wormhole</option>
+											<option value="2">mid/dim</option>
+											<option value="3">dm</option>
+											<option value="4">rpt</option>
+											<option value="5">mail</option>
+											<option value="6">dw</option>
+										</select>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">周期</label>
+									<div class="controls">
+										<select class="input-big" name="cycle">
+											<option value="Y">年</option>
+											<option value="S">季</option>
+											<option value="M">月</option>
+											<option value="W">周</option>
+											<option value="D">日</option>
+											<option value="H">时</option>
+											<option value="MI">分</option>
+										</select>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">超时时间</label>
+										<div class="controls">
+											<select class="input-big" name="timeout">
+												<option value="90">1.5小时</option>
+												<option value="120">2小时</option>
+												<option value="150">2.5小时</option>
+											</select>
+										</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">运行级别</label>
+									<div class="controls">
+										<label class="checkbox inline"> 
+											<input type="radio" value="1" name="prio-lvl"> 高
+										</label>
+										<label class="checkbox inline"> 
+											<input type="radio" value="2" name="prio-lvl"> 中
+										</label>
+										<label class="checkbox inline"> 
+											<input type="radio" value="3" name="prio-lvl"> 低
+										</label>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">是否生效</label>
+									<div class="controls">
+										<label class="checkbox inline"> 
+											<input type="radio" value="0" name="if-val"> 否
+										</label> 
+										<label class="checkbox inline">
+											<input type="radio" value="1" name="if-val"> 是
+										</label>
+										<label class="checkbox inline">
+											<input type="radio" value="2" name="if-val"> 失效
+										</label>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">偏移类型</label>
+									<div class="controls">
+										<select class="input-big" name="offset-type">
+											<option value="offset">offset</option>
+											<!-- <option value="appoint">appoint</option> -->
+										</select>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">偏移量</label>
+									<div class="controls">
+										<select class="input-big" name="offset">
+											<option value="D0">D0</option>
+											<option value="D1">D1</option>
+											<option value="D2">D2</option>
+											<option value="D3">D3</option>
+											<option value="D4">D4</option>
+											<option value="D5">D5</option>
+											<option value="D6">D6</option>
+											<option value="M0">M0</option>
+											<option value="M1">M1</option>
+											<option value="M2">M2</option>
+											<option value="M3">M3</option>
+											<option value="M4">M4</option>
+											<option value="M5">M5</option>
+											<option value="M6">M6</option>
+										</select>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">执行频率</label>
+									<div class="controls">
+										<input type="text" class="input-big" name="freq"/>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="span6">
+							<div class="form-horizontal basic-form">
+								<div class="control-group">
+									<label class="control-label">出错重新执行</label>
+									<div class="controls">
+										<label class="checkbox inline"> 
+											<input type="radio" value="0" name="if-recall"> 否
+										</label>
+										<label class="checkbox inline"> 
+											<input type="radio" value="1" name="if-recall"> 是
+										</label>
+									</div>
+								</div>
+                                <!--
+								<div class="control-group">
+									<label class="control-label">重新执行code</label>
+									<div class="controls">
+										<input type="text" class="input-big" name="recall-code" value="1" />
+									</div>
+								</div>
+								-->
+								<div class="control-group">
+									<label class="control-label">依赖重新执行</label>
+									<div class="controls">
+										<label class="checkbox inline"> 
+											<input type="radio" value="0" name="if-wait"> 否
+										</label>
+										<label class="checkbox inline"> 
+											<input type="radio" value="1" name="if-wait"> 是
+										</label>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">依赖执行code</label>
+									<div class="controls">
+										<input type="text" class="input-big" name="wait-code" />
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">成功code</label>
+									<div class="controls">
+										<input type="text" class="input-big" name="success-code" />
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">重跑次数上限</label>
+									<div class="controls">
+										<select class="input-big" name="recall-limit">
+											<option value="1">1</option>
+											<option value="2">2</option>
+											<option value="3">3</option>
+											<option value="4">4</option>
+											<option value="5">5</option>
+											<option value="6">6</option>
+											<option value="7">7</option>
+											<option value="8">8</option>
+											<option value="9">9</option>
+											<option value="10">10</option>
+										</select>
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">重跑间隔</label>
+									<div class="controls">
+										<select class="input-big" name="recall-interval">
+											<option value="1">1分钟</option>
+											<option value="2">2分钟</option>
+											<option value="3">3分钟</option>
+											<option value="4">4分钟</option>
+											<option value="5">5分钟</option>
+											<option value="6">6分钟</option>
+											<option value="7">7分钟</option>
+											<option value="8">8分钟</option>
+											<option value="9">9分钟</option>
+											<option value="10">10分钟</option>
+										</select>
+									</div>
+								</div>
+								<hr />
+                                <!--
+                                <div class="control-group">
+                                    <label class="control-label">执行器</label>
+                                    <div class="controls">
+                                        <select class="input-big" name="task_obj">
+                                            <option value="151">151服务器执行器</option>
+                                            <option value="49">49服务器执行器</option>
+                                        </select>
+                                    </div>
+                                </div>-->
+								<div class="control-group">
+									<label class="control-label">参数1</label>
+									<div class="controls">
+										<input type="text" class="input-big" name="para1" />
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">参数2</label>
+									<div class="controls">
+										<input type="text" class="input-big" name="para2" />
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">参数3</label>
+									<div class="controls">
+										<input type="text" class="input-big" name="para3" />
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label">备注</label>
+									<div class="controls">
+										<textarea class="input-big" rows="4" name="remark"></textarea>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="accordion-group">
+			<div class="accordion-heading bg-whitesmoke">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#advanced">
+					3. 前驱依赖配置
+				</a>
+			</div>
+			<div id="advanced" class="accordion-body collapse">
+				<div class="accordion-inner">
+					<div class="row-fluid">
+						<div class="span12">
+							<table class="table table-bordered bg-white">
+								<thead>
+									<tr class="bg-whitesmoke">
+										<th style="width:20%;">任务组</th>
+										<th style="width:50%;">任务名称</th>
+										<th style="width:20%;">前驱任务周期</th>
+										<th style="width:10%;">操作</th>
+									</tr>
+								</thead>
+								<tbody id="advanced-body">
+									<tr>
+										<td style="width:20%;">
+											<select style="width:100%;">
+												<option value="1">wormhole</option>
+												<option value="2">mid/dim</option>
+												<option value="3">dm</option>
+												<option value="4">rpt</option>
+												<option value="5">mail</option>
+												<option value="6">dw</option>
+											</select>
+										</td>
+										<td style="width:50%;">
+											<select style="width:100%;">
+												<option value="task1">task1</option>
+												<option value="task2">task2</option>
+												<option value="task3">task3</option>
+											</select>
+										</td>
+										<td style="width:20%;">
+											<select style="width:100%;">
+												<option value="0">0</option>
+												<option value="1">1</option>
+												<option value="2">2</option>
+												<option value="3">3</option>
+												<option value="4">4</option>
+												<option value="5">5</option>
+												<option value="6">6</option>
+												<option value="7">7</option>
+												<option value="8">8</option>
+												<option value="9">9</option>
+												<option value="10">10</option>
+												<option value="11">11</option>
+												<option value="12">12</option>
+												<option value="13">13</option>
+												<option value="14">14</option>
+												<option value="15">15</option>
+												<option value="16">16</option>
+												<option value="17">17</option>
+												<option value="18">18</option>
+												<option value="19">19</option>
+												<option value="20">20</option>
+												<option value="21">21</option>
+												<option value="22">22</option>
+												<option value="23">23</option>
+												<option value="24">24</option>
+												<option value="25">25</option>
+												<option value="26">26</option>
+												<option value="27">27</option>
+												<option value="28">28</option>
+												<option value="29">29</option>
+												<option value="30">30</option>
+											</select>
+										</td>
+										<td style="width:10%;">
+											<button class="btn"><i class="icon-remove"></i></button>
+										</td>
+									</tr>
+								</tbody>
+								<tfoot>
+									<tr class="bg-whitesmoke">
+										<td colspan="4" style="width:10%;">
+											<button class="btn add-row-btn" id="add-row-btn"><i class="icon-plus"></i></button>
+										</td>
+									</tr>
+								</tfoot>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<div class="pull-left">
+		<button id="copy-btn" type="button" class="btn btn-large">复制配置</button>
+	</div>
+	<div class="pull-right">
+		<button id="submit-btn" type="submit" class="btn btn-large btn-primary">确定</button>
+		<button type="button" class="btn btn-large" data-dismiss="modal">取消</button>
+	</div>
+</div>

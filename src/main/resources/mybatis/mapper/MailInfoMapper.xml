@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dianping.darkbat.mapper.MailInfoMapper">
+    <sql id="mailInfoTable">etl_mail_info</sql>
+    <sql id="mailDetailTable">etl_mail_detail</sql>
+    
+    <resultMap id="MailInfoMap" type="MailInfoEntity">
+        <id property="mailId" column="mail_id" />
+        <result property="mailTitle" column="mail_title" />
+        <result property="sendCycle" column="send_cycle" />
+        <result property="mailContent" column="mail_content" />
+        <result property="userEmailList" column="user_email_list" />
+        <result property="itemIdList" column="item_id_list" />
+        <result property="itemType" column="item_type" />
+        <result property="systemId" column="system_id" />
+        <result property="sendTime" column="send_time" />
+        <result property="timeRange" column="time_range" />
+        <result property="addUser" column="add_user" />
+        <result property="updateUser" column="update_user" />
+        <result property="addTime" column="add_time" />
+        <result property="updateTime" column="update_time" />
+        <result property="isValid" column="is_valid" />
+        <result property="taskId" column="task_id" />
+    </resultMap>
+    
+    <resultMap id="MailDetailMap" type="MailDetailEntity">
+        <id property="mailId" column="mail_id" />
+        <result property="reportId" column="report_id" />
+        <result property="itemType" column="item_type" />
+        <result property="dataCycle" column="data_cycle" />
+        <result property="displayIndex" column="display_index" />
+        <result property="isHide" column="is_hide" />
+    </resultMap>
+    
+    <select id="getMailList" parameterType="MailInfoEntity" resultMap="MailInfoMap">
+        SELECT *
+        FROM
+            <include refid="mailInfoTable" />
+        <where>
+            <if test="mailInfo != null">
+                <if test="mailInfo.mailId != null">mail_id = #{mailInfo.mailId}</if>
+                <if test="mailInfo.mailTitle != null">AND mail_title LIKE '%${mailInfo.mailTitle}%'</if>
+                <if test="mailInfo.sendCycle != null">AND send_cycle = #{mailInfo.sendCycle}</if>
+                <if test="mailInfo.userEmailList != null">AND user_email_list LIKE '%${mailInfo.userEmailList}%'</if>
+                <if test="mailInfo.itemIdList != null">AND item_id_list LIKE '%${mailInfo.itemIdList}%'</if>
+                <if test="mailInfo.itemType != null">AND item_type = #{mailInfo.itemType}</if>
+                <if test="mailInfo.systemId != null">AND system_id = #{mailInfo.systemId}</if>
+                <if test="mailInfo.sendTime != null">AND send_time = #{mailInfo.sendTime}</if>
+                <if test="mailInfo.timeRange != null">AND time_range = #{mailInfo.timeRange}</if>
+                <if test="mailInfo.addUser != null">AND add_user = #{mailInfo.addUser}</if>
+                <if test="mailInfo.updateUser != null">AND update_user = #{mailInfo.updateUser}</if>
+            </if>
+            AND is_valid = 1
+        </where>
+        ORDER BY mail_title
+    </select>
+    
+    <select id="getMailListContainsReport" parameterType="Integer" resultMap="MailInfoMap">
+        SELECT *
+        FROM
+            <include refid="mailInfoTable" />
+        <where>
+            CONCAT(',', item_id_list, ',') LIKE '%,${reportId},%'
+            AND is_valid = 1
+        </where>
+    </select>
+    
+    
+    <select id="getMailByName" parameterType="MailInfoEntity" resultMap="MailInfoMap">
+        SELECT *
+        FROM
+            <include refid="mailInfoTable" />
+        <where>
+            mail_title = #{mailInfo.mailTitle}
+            AND is_valid = 1
+        </where>
+    </select>
+    
+    <select id="getExistedMailInfo" parameterType="Map" resultMap="MailInfoMap">
+        SELECT *
+        FROM
+            <include refid="mailInfoTable" />
+        <where>
+            mail_title = #{mailTitle}
+            <if test="mailId != null">AND mail_id NOT IN (#{mailId})</if>
+            AND is_valid = 1
+        </where>
+    </select>
+    
+    <update id="updateMailInfo" parameterType="MailInfoEntity">
+        UPDATE <include refid="mailInfoTable"/>
+        SET
+        <if test="mailInfo != null">
+            <if test="mailInfo.mailTitle != null">mail_title = #{mailInfo.mailTitle},</if>
+            <if test="mailInfo.sendCycle != null">send_cycle = #{mailInfo.sendCycle},</if>
+            <if test="mailInfo.mailContent != null">mail_content = #{mailInfo.mailContent},</if>
+            <if test="mailInfo.userEmailList != null">user_email_list = #{mailInfo.userEmailList},</if>
+            <if test="mailInfo.itemIdList != null">item_id_list = #{mailInfo.itemIdList},</if>
+            <if test="mailInfo.itemType != null">item_type = #{mailInfo.itemType},</if>
+            <if test="mailInfo.systemId != null">system_id = #{mailInfo.systemId},</if>
+            <if test="mailInfo.sendTime != null">send_time = #{mailInfo.sendTime},</if>
+            <if test="mailInfo.timeRange != null">time_range = #{mailInfo.timeRange},</if>
+            <if test="mailInfo.updateUser != null">update_user = #{mailInfo.updateUser},</if>
+            <if test="mailInfo.updateTime != null">update_time = #{mailInfo.updateTime},</if>
+            is_valid = 1
+        </if>
+        <where>
+            mail_id = #{mailInfo.mailId}
+        </where>
+    </update>
+    
+    <insert id="insertMailInfo" parameterType="MailInfoEntity" useGeneratedKeys="true" keyProperty="mailInfo.mailId">
+        INSERT INTO <include refid="mailInfoTable"/>
+        (
+            mail_title, send_cycle, mail_content,
+            user_email_list, item_id_list, item_type, system_id,
+            send_time, time_range, add_user, 
+            update_user, add_time, update_time, is_valid, task_id
+        ) VALUES (
+            #{mailInfo.mailTitle}, #{mailInfo.sendCycle}, #{mailInfo.mailContent},
+            #{mailInfo.userEmailList}, #{mailInfo.itemIdList}, #{mailInfo.itemType}, #{mailInfo.systemId},
+            #{mailInfo.sendTime}, #{mailInfo.timeRange}, #{mailInfo.addUser}, 
+            #{mailInfo.updateUser}, #{mailInfo.addTime}, #{mailInfo.updateTime}, 1, #{mailInfo.taskId}
+        )
+    </insert>
+    
+    <update id="deleteMailInfo" parameterType="Map">
+        UPDATE <include refid="mailInfoTable"/>
+        SET is_valid = 0
+        <where>
+            mail_id = #{mailId}
+        </where>
+    </update>
+    
+    <update id="updateTaskId" parameterType="Map">
+        UPDATE <include refid="mailInfoTable"/>
+        SET task_id = #{taskId}
+        <where>
+            mail_id = #{mailId}
+        </where>
+    </update>
+    
+    <select id="getMailDetail" resultMap="MailDetailMap">
+        SELECT *
+        FROM <include refid="mailDetailTable"/>
+        <where>
+            <if test="info != null">
+                <if test="info.mailId != null">AND mail_id = #{info.mailId}</if>
+                <if test="info.reportId != null">AND report_id = #{info.reportId}</if>
+                <if test="info.itemType != null">AND item_type = #{info.itemType}</if>
+                <if test="info.dataCycle != null">AND data_cycle = #{info.dataCycle}</if>
+                <if test="info.displayIndex != null">AND display_index = #{info.displayIndex}</if>
+                <if test="info.isHide != null">AND is_hide = #{info.isHide}</if>
+            </if>
+        </where>
+    </select>
+    
+    <update id="setMailDetail">
+        UPDATE <include refid="mailDetailTable"/>
+        <set>
+            <if test="info.dataCycle != null">data_cycle = #{info.dataCycle},</if>
+            <if test="info.displayIndex != null">display_index = #{info.displayIndex},</if>
+            <if test="info.isHide != null">is_hide = #{info.isHide},</if>
+        </set>
+        WHERE mail_id = #{info.mailId} and report_id = #{info.reportId} and item_type = #{info.itemType}
+    </update>
+
+    <insert id="addMailDetail">
+        INSERT INTO <include refid="mailDetailTable"/>
+        (mail_id,report_id, item_type, data_cycle, display_index, is_hide)
+        VALUES
+        (#{info.mailId},#{info.reportId}, #{info.itemType}, #{info.dataCycle}, #{info.displayIndex}, #{info.isHide})
+    </insert>
+    
+    <delete id="delMailDetail">
+        DELETE FROM <include refid="mailDetailTable"/> 
+        <where>
+            <if test="info != null">
+                <if test="info.mailId != null">mail_id = #{info.mailId}</if>
+                <if test="info.reportId != null">report_id = #{info.reportId}</if>
+            </if>
+        </where>
+    </delete>
+</mapper>

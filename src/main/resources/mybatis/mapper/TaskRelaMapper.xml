@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dianping.darkbat.mapper.TaskRelaMapper">
+	<sql id="taskTable">etl_task_cfg</sql>
+	<sql id="table">etl_taskrela_cfg</sql>
+
+	<resultMap id="TaskEntityMap" type="TaskEntity">
+		<id property="taskId" column="task_id" />
+		<result property="taskName" column="task_name" />
+		<result property="tableName" column="table_name" />
+		<result property="remark" column="remark" />
+		<result property="databaseSrc" column="database_src" />
+		<result property="taskObj" column="task_obj" />
+		<result property="para1" column="para1" />
+		<result property="para2" column="para2" />
+		<result property="para3" column="para3" />
+		<result property="logHome" column="log_home" />
+		<result property="logFile" column="log_file" />
+		<result property="taskGroupId" column="task_group_id" />
+		<result property="cycle" column="cycle" />
+		<result property="prioLvl" column="prio_lvl" />
+		<result property="ifRecall" column="if_recall" />
+		<result property="ifWait" column="if_wait" />
+		<result property="ifVal" column="if_val" />
+		<result property="timeout" column="timeout" />
+		<result property="addUser" column="add_user" />
+		<result property="addTime" column="add_time" />
+		<result property="updateUser" column="update_user" />
+		<result property="updateTime" column="update_time" />
+		<result property="type" column="type" />
+		<result property="offset" column="offset" />
+		<result property="offsetType" column="offset_type" />
+		<result property="freq" column="freq" />
+		<result property="owner" column="owner" />
+		<result property="waitCode" column="wait_code" />
+		<result property="recallCode" column="recall_code" />
+		<result property="successCode" column="success_code" />
+	</resultMap>
+
+	<resultMap id="TaskRelaEntityMap" type="TaskRelaEntity">
+		<id property="taskId" column="task_id" />
+		<result property="taskPreId" column="task_pre_id" />
+		<result property="remark" column="remark" />
+		<result property="cycleGap" column="cycle_gap" />
+		<result property="timeStamp" column="time_stamp" />
+	</resultMap>
+
+
+	<select id="getTaskRela" resultMap="TaskRelaEntityMap">
+		SELECT *
+		FROM <include refid="table" />
+	</select>
+
+    <select id="getTaskRelaByParam" parameterType="Map" resultMap="TaskRelaEntityMap">
+        SELECT *
+        FROM <include refid="table" />
+        <where>
+            <if test="taskRela != null">
+                <if test="taskRela.taskId != null">AND task_id = #{taskRela.taskId}</if>
+                <if test="taskRela.taskPreId != null">AND task_pre_id = #{taskRela.taskPreId}'</if>
+                <if test="taskRela.remark != null">AND remark = #{taskRela.remark}</if>
+                <if test="taskRela.cycleGap != null">AND cycle_gap = #{taskRela.cycleGap}</if>
+                <if test="taskRela.timeStamp != null">AND time_stamp = #{taskRela.timeStamp}</if>
+            </if>
+        </where>
+        <if test="sort != null and sort != ''">ORDER BY ${sort}</if>
+        <if test="limit != null and offset != null">LIMIT #{offset},#{limit}</if>
+    </select>
+
+	<select id="getTaskRelaByTaskId" resultMap="TaskRelaEntityMap">
+		SELECT *
+		FROM <include refid="table" />
+		WHERE task_id = #{taskId}
+	</select>
+	
+	<select id="getTaskRelaIdByTaskId" resultType="Integer">
+		SELECT task_pre_id
+		FROM <include refid="table" />
+		WHERE task_id = #{taskId}
+	</select>
+
+	<select id="getPreTaskInfoByTaskId" resultMap="TaskEntityMap">
+		SELECT * FROM <include refid="taskTable" />
+		WHERE task_id IN (
+			SELECT distinct task_pre_id
+			FROM <include refid="table" />
+			WHERE task_id = #{taskId}
+		)
+	</select>
+
+	<select id="getTaskRelaByTaskPreId" resultMap="TaskRelaEntityMap">
+		SELECT *
+		FROM <include refid="table" />
+		WHERE task_pre_id = #{taskPreId}
+	</select>
+
+	<insert id="insertTaskRela" parameterType="TaskRelaEntity">
+		INSERT INTO <include refid="table" />
+		(
+			task_id,task_pre_id,remark,cycle_gap,time_stamp
+		)
+		VALUES
+		(
+			#{taskId},#{taskPreId},#{remark},#{cycleGap},#{timeStamp}
+		)
+	</insert>
+
+	<delete id="deleteTaskRela" parameterType="Integer">
+		DELETE FROM <include refid="table" />
+		WHERE task_id = #{taskId}
+	</delete>
+</mapper>

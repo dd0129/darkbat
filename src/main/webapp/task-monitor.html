@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>调度系统</title>
+
+    <!-- Le styles -->
+    <link rel="Stylesheet" href="../pluto/resource/css/bootstrap.min.css">
+    <link rel="Stylesheet" href="../pluto/resource/css/datepicker.css">
+    <link rel="Stylesheet" href="../pluto/resource/css/bootstrap-responsive.min.css" />
+    <link rel="Stylesheet" href="../pluto/resource/css/zTreeStyle/zTreeStyle.css"/>
+    <link rel="Stylesheet" href="../pluto/resource/css/halley-common.css">
+    <link rel="Stylesheet" href="resource/css/darkbat-common.css">
+
+    <!-- Le fav and touch icons -->
+    <link rel="Shortcut Icon" href="../pluto/resource/img/icon.png" type="image/x-icon">
+
+    <style type="text/css">
+        .topology-container { box-shadow: #CCC 0px 0px 1px 1px inset; height: 800px; }
+
+        #info-dialog { border:1px; box-shadow:5px 5px 7px #999; border-top:1px solid #CCC; position:absolute; z-index:20; background-color:#fff; margin:40px 0 0 30px; display:block;}
+        #info-dialog > .task-info { padding:0 0 10px 0; }
+        #info-dialog > .task-info > table { width:600px; float:left; }
+        #info-dialog > .task-info > div { float:left; }
+        #info-dialog > div { float:left; }
+        #info-dialog .dialog-boot { border-top:1px solid #DDD; background-color:whiteSmoke; text-align:center; padding:15px 0 15px 0; }
+        #info-dialog .controller ul { list-style:none; padding:28px 20px 0 20px; }
+        #info-dialog .controller ul li { text-align:center; padding:6px 0 6px 0; }
+        #info-dialog .controller ul li.separator { border-top:1px solid #DDD; padding:0 0 6px 0; }
+
+        .form-horizontal .control-group { margin-bottom:10px; }
+        .form-horizontal .controls-fix { margin-left:110px; }
+        .form-horizontal .controls-well-fix { margin-left:62px; }
+        .form-horizontal .control-label-fix { width:100px; }             
+        .form-horizontal .control-label-well-fix { width:52px; }
+        .form-horizontal .form-search { padding-left:108px; }
+
+        .btn-first { margin-left:145px; }
+        .btn-second { margin-left:30px; }
+        .dialog-btn { margin-left:649px; }
+        .prev-config p { margin:4px 0 9px 65px; }
+        .prev-config .remark { width:415px; }
+        .table-tab-content { max-height:445px; }
+        .control-panel { margin-top:25px; }
+
+        .breadcrumb { margin:0 0 10px; }
+        .breadcrumb .active { color:#999; }
+        
+        .tag { width:70%; height:14px; border:solid 1px white; display:block; }
+        .tag.success { background-color:#458B00; }
+        .tag.fail { background-color:#FF3030; }
+        .tag.init { background-color:#E3E3E3; }
+        .tag.running { background-color:#63B8FF; }
+        .tag.suspend { background-color:#878787; }
+        .tag.init-error { background-color:#EEEE00; }
+        .tag.wait { background-color:#EEAD0E; }
+        .tag.ready { background-color:#FFFCC7; }
+        .tag.timeout { background-color:#0000FF; }
+
+        body, input, select, textarea { font-family:'Courier New'; }
+        td { word-wrap:break-word; }
+        table { table-layout:fixed; }
+    </style>
+</head>
+<body mg_screen_capture_injected="true">
+    <div class="navbar navbar-fixed-top" id="navbar-global"></div>
+    <div class="container-fluid">
+        <div id="bread-crumb"></div>
+        <div class="row-fluid">
+            <div class="span3">
+                <div class="well">
+                    <div class="form-horizontal">
+                        <div class="control-group">
+                            <label class="control-label control-label-fix">开始时间</label>
+                            <div class="controls controls-fix">
+                                <input type="text" class="span10 datepicker" id="start-date"/>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label control-label-fix">结束时间</label>
+                            <div class="controls controls-fix">
+                                <input type="text" class="span10 datepicker" id="end-date"/>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label control-label-fix">任务状态</label>
+                            <div class="controls controls-fix">
+                                <select class="span10" id="status">
+                                    <option value="">--选择全部--</option>
+                                    <option value="1">success</option>
+                                    <option value="-2" selected="selected">unsuccess</option>
+                                    <option value="-1">&nbsp;&nbsp;fail</option>
+                                    <option value="0">&nbsp;&nbsp;init</option>
+                                    <option value="2">&nbsp;&nbsp;running</option>
+                                    <option value="3">&nbsp;&nbsp;suspend</option>
+                                    <option value="4">&nbsp;&nbsp;init error</option>
+                                    <option value="5">&nbsp;&nbsp;wait</option>
+                                    <option value="6">&nbsp;&nbsp;ready</option>
+                                    <option value="7">&nbsp;&nbsp;timeout</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label control-label-fix">开发者</label>
+                            <div class="controls controls-fix">
+                                <select class="span10" id="owner">
+                                    <option value="">--选择全部--</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label control-label-fix">执行周期</label>
+                            <div class="controls controls-fix">
+                                <select class="span10" id="cycle">
+                                    <option value="">--选择全部--</option>
+                                    <option value="Y">年</option>
+                                    <option value="S">季</option>
+                                    <option value="M">月</option>
+                                    <option value="W">周</option>
+                                    <option value="D">日</option>
+                                    <option value="H">时</option>
+                                    <option value="MI">分</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label control-label-fix">优先级别</label>
+                            <div class="controls controls-fix">
+                                <select class="span10" id="prioLvl">
+                                    <option value="">--选择全部--</option>
+                                    <option value="-1">高</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label control-label-fix">任务名称或ID</label>
+                            <div class="controls controls-fix">
+                                <input type="text" class="span10" id="task-name" placeholder="模糊查询..."/>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label control-label-fix">只显示自己</label>
+                            <div class="controls controls-fix">
+                                <select class="span10" id="onlyself">
+                                    <option value="">--请选择--</option>
+                                    <option value="1">是</option>
+                                    <option value="0">否</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-search">
+                            <a class="btn btn-primary btn-large CLICKABLE btn-search" data-loading-text="查询中..">开始查询</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="well">
+                    <div class="form-horizontal">
+                        <div class="control-group">
+                            <label class="control-label control-label-fix">success</label>
+                            <div class="controls controls-fix">
+                                <span class="tag success"></span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label control-label-fix">fail</label>
+                            <div class="controls controls-fix">
+                                <span class="tag fail"></span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label control-label-fix">init</label>
+                            <div class="controls controls-fix">
+                                <span class="tag init"></span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label control-label-fix">running</label>
+                            <div class="controls controls-fix">
+                                <span class="tag running"></span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label control-label-fix">suspend</label>
+                            <div class="controls controls-fix">
+                                <span class="tag suspend"></span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label control-label-fix">init error</label>
+                            <div class="controls controls-fix">
+                                <span class="tag init-error"></span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label control-label-fix">wait</label>
+                            <div class="controls controls-fix">
+                                <span class="tag wait"></span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label control-label-fix">ready</label>
+                            <div class="controls controls-fix">
+                                <span class="tag ready"></span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label control-label-fix">timeout</label>
+                            <div class="controls controls-fix">
+                                <span class="tag timeout"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="span9">
+                <div class="back-info"></div>
+                <div id="topology-container" class="topology-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script type="text/javascript" src="../pluto/resource/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="../pluto/resource/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../pluto/resource/js/bootstrap-datepicker.js"></script>
+    <script type="text/javascript" src="../pluto/resource/js/halley-global.js"></script>
+    <script type="text/javascript" src="../pluto/resource/js/halley-common.js"></script>
+    <script type="text/javascript" src="../pluto/resource/js/halley-prototype.js"></script>
+    <script type="text/javascript" src="../pluto/resource/js/topology.min.1.1.js"></script>
+    <script type="text/javascript" src="../pluto/resource/js/jquery.ztree.all-3.5.min.js"></script>
+    <script type="text/javascript" src="resource/js/task-common.js"></script>
+    <script type="text/javascript" src="resource/js/task-monitor.js"></script>
+</body>
+</html>

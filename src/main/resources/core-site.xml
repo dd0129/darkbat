@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+  
+  <property>
+    <name>hadoop.security.authentication</name>
+    <value>kerberos</value>
+  </property>
+
+  <property>
+    <name>test.hadoop.principal</name>
+    <value>bicron@DIANPING.COM</value>
+  </property>
+
+  <property>
+    <name>test.hadoop.keytab.file</name>
+    <value>/data/hive/.keytab</value>
+  </property>
+
+</configuration>

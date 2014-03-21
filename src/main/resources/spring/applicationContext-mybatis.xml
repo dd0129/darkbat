@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+						http://www.springframework.org/schema/context
+						http://www.springframework.org/schema/context/spring-context-3.0.xsd
+						http://www.springframework.org/schema/aop
+						http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+						http://www.springframework.org/schema/tx
+						http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+    <!-- MYSQL - DianPingDW -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />
+    </bean>
+    <bean id="MonitorUserMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+        <property name="mapperInterface" value="com.dianping.darkbat.mapper.MonitorUserMapper" />
+    </bean>
+    <!-- mail -->
+    <bean id="MailInfoMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+        <property name="mapperInterface" value="com.dianping.darkbat.mapper.MailInfoMapper" />
+    </bean>
+    <!-- task -->
+    <bean id="TaskMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+        <property name="mapperInterface" value="com.dianping.darkbat.mapper.TaskMapper" />
+    </bean>
+    <bean id="TaskRelaMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+        <property name="mapperInterface" value="com.dianping.darkbat.mapper.TaskRelaMapper" />
+    </bean>
+    <bean id="TaskRelaStatusMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+        <property name="mapperInterface" value="com.dianping.darkbat.mapper.TaskRelaStatusMapper" />
+    </bean>
+    <bean id="TaskStatusMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+        <property name="mapperInterface" value="com.dianping.darkbat.mapper.TaskStatusMapper" />
+    </bean>
+
+    <!-- MYSQL - DPDict(used by AutoETL) -->
+    <bean id="mysql-sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="mysql-dataSource" />
+        <property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />
+    </bean>
+    <bean id="MySQLMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="mysql-sqlSessionFactory" />
+        <property name="mapperInterface" value="com.dianping.darkbat.mapper.MySQLMapper" />
+    </bean>
+
+    <!-- GP57 -->
+    <bean id="gp-sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="gp-dataSource" />
+        <property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />
+    </bean>
+    <bean id="GPMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="gp-sqlSessionFactory" />
+        <property name="mapperInterface" value="com.dianping.darkbat.mapper.GPMapper" />
+    </bean>
+    
+    <!-- POSTGRE REPORT SERVER add by xiaom -->
+    <bean id="report-sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="report-dataSource" />
+        <property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />
+    </bean>
+    <bean id="REPORTMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="report-sqlSessionFactory" />
+        <property name="mapperInterface" value="com.dianping.darkbat.mapper.REPORTMapper" />
+    </bean>
+
+    <!-- Hive Meta -->
+    <bean id="hive-sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="hive-dataSource" />
+        <property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />
+    </bean>
+    <bean id="HiveMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="hive-sqlSessionFactory" />
+        <property name="mapperInterface" value="com.dianping.darkbat.mapper.HiveMapper" />
+    </bean>
+    <bean id="HiveMetaMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="hive-sqlSessionFactory" />
+        <property name="mapperInterface" value="com.dianping.darkbat.mapper.TabbuildMapper" />
+    </bean>
+
+    <!-- Hive Predeploy Meta -->
+    <bean id="HivePredeployMeta-sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="hivepredeploy-dataSource" />
+        <property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />
+    </bean>
+    <bean id="HivePredeployMetaMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="HivePredeployMeta-sqlSessionFactory" />
+        <property name="mapperInterface" value="com.dianping.darkbat.mapper.TabbuildMapper" />
+    </bean>
+
+    <!-- MYSQL - SLA -->
+    <bean id="SlaMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+        <property name="sqlSessionFactory" ref="sqlSessionFactory" />
+        <property name="mapperInterface" value="com.dianping.darkbat.mapper.SlaMapper" />
+    </bean>
+
+</beans>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dianping.darkbat.mapper.TaskRelaStatusMapper">
+	<sql id="taskReleStatus">etl_taskrela_status</sql>
+	<sql id="taskStatus">etl_task_status</sql>
+	
+	<resultMap id="TaskRelaStatusMap" type="TaskRelaStatusEntity">
+		<id property="preStsId" column="pre_sts_id" />
+		<result property="preId" column="pre_id" />
+		<result property="taskStatusId" column="task_status_id"/>
+		<result property="taskId" column="task_id"/>
+		<result property="timeStamp" column="time_stamp"/>
+	</resultMap>
+	<resultMap id="childToParentMap" type="TaskChildToParentEntity">
+		<result property="childId" column="child_id" />
+		<result property="childText" column="child_text"/>
+		<result property="childTaskName" column="child_task_name" />
+		<result property="childStatus" column="child_status" />
+        <result property="childEndTime" column="child_end_time" />
+		<result property="parentId" column="parent_id" />
+		<result property="parentText" column="parent_text"/>
+		<result property="parentTaskName" column="parent_task_name"/>
+		<result property="parentStatus" column="parent_status" />
+        <result property="parentEndTime" column="parent_end_time" />
+		<result property="timeId" column="time_id" />
+	</resultMap>
+	
+	<select id="getTaskRelaStatus" resultMap="TaskRelaStatusMap">
+		SELECT *
+		FROM <include refid="taskReleStatus" />
+		<where>
+			<if test = "taskStatusId != null">
+				task_status_id = #{taskStatusId}
+			</if>
+			<if test = "preStatusId != null">
+				AND pre_sts_id = #{preStatusId}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getChildToParent" resultMap="childToParentMap">
+		SELECT
+			a.task_status_id 	AS child_id,
+			a.task_id			AS child_text,
+			a.task_name 		AS child_task_name,
+			a.status			AS child_status,
+        UNIX_TIMESTAMP(a.end_time)    AS child_end_time,
+			a.time_id 			AS time_id,
+			c.task_status_id 	AS parent_id,
+			c.task_id			AS parent_text,
+			c.task_name			AS parent_task_name,
+			c.status			AS parent_status,
+        UNIX_TIMESTAMP(c.end_time)    AS parent_end_time
+		FROM <include refid="taskStatus" /> a
+		INNER JOIN <include refid="taskReleStatus" /> b
+			ON a.task_status_id = b.task_status_id
+		INNER JOIN <include refid="taskStatus"/> c
+			ON b.pre_sts_id = c.task_status_id
+		<where>
+			<if test="date != null">
+				DATE(a.time_id) = DATE(#{date})
+			</if>
+		</where>
+	</select>
+	
+</mapper>

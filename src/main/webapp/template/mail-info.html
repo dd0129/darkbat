@@ -1,0 +1,70 @@
+<div id="mail-info" class="info-box" data-id="{@mailId}">
+    <h3>邮件<em>{@mailTitle}</em>详细内容</h3>
+    <div class="content-box">
+        <div id="mail-config-back-info"></div>
+        <div class="form-horizontal">
+            <div class="control-group" id="mail-title">
+                <label class="control-label">邮件任务ID</label>
+                <div class="controls">
+                    <label for="" class="padding-label">{@taskId}</label>
+                </div>
+            </div>
+            <div class="control-group" id="mail-title">
+                <label class="control-label">邮件名称</label>
+                <div class="controls">
+                    <label for="" class="padding-label">{@mailTitle}</label>
+                </div>
+            </div>
+            <div class="control-group" id="sendCycle">
+                <label class="control-label">发送频率</label>
+                <div class="controls">
+                    <label data-transform="sendCycleTransform" class="padding-label">{@sendCycle}</label>
+                </div>
+            </div>
+            <!-- <div class="control-group" id="time-range" data-transform="timeRangeTransform">
+                <label class="control-label">日报时间区间</label>
+                <div class="controls">
+                    <label>{@timeRange}</label>
+                </div>
+            </div> -->
+            <div class="control-group">
+                <label class="control-label">发送时间</label>
+                <div class="controls">
+                    <label class="padding-label">{@sendTime}</label>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" data-transform="itemTypeTransform"></label>
+                <div class="controls">
+                    <div data-transform="idToRptNameTransform" style="padding-right: 50px;font-size: 13px;"></div>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">接收人员</label>
+                <div class="controls">
+                    <label data-transform="emailUserListTransform" class="padding-label"></label>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">负责人</label>
+                <div class="controls">
+                    <label class="padding-label">{@addUser}</label>
+                </div>
+            </div>
+            <div id="email-chooser-container"></div>
+            <div class="control-group">
+                <label class="control-label">邮件正文</label>
+                <div class="controls">
+                    <textarea id="mail-content" data-transform="mailContentTransform" disabled>{@mailContent}</textarea>
+                </div>
+            <div><!-- class="pull-right" -->
+                <p class="btn-info-action-edit">
+                    <a id="mail-edit" class="btn btn-primary" data-loading="正在执行...">编辑</a>
+                    <a id="mail-delete" class="btn" data-loading="正在执行...">删除</a>
+                    <a id="mail-send" class="btn" data-loading="正在执行...">发送</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+                </div>
